@@ -18,6 +18,8 @@
 #define START_WIDTH 1024
 #define START_HEIGHT 768
 
+typedef enum{false, true} Boolean;
+
 /*Vector structures*/
 typedef struct{
     double x;
@@ -32,7 +34,7 @@ typedef struct{
 
 
 /*Shape structures*/
-typedef enum{SPHERE, RECTANGLE} ShapeType;
+typedef enum{SPHERE, POLYGON} ShapeType;
 
 typedef struct{
     Point3D position;
@@ -40,16 +42,15 @@ typedef struct{
 } Sphere;
 
 typedef struct{
-    Point3D point1;
-    Point3D point2;
-    Point3D point3;
-    Point3D point4;
+    Point3D * points;
     Vector3D normal;
-} Rectangle;
+    int numberOfPoints;
+} Polygon;
+
 
 union{
     Sphere sphere;
-    Rectangle rectangle;
+    Polygon polygon;
 } Shape;
 
 typedef struct{
@@ -60,5 +61,9 @@ typedef struct{
 /*Global variable structure (Singleton pattern)*/
 typedef struct{
     ShapeData * shapes;
+    Boolean ambientDiffuse;
+    Boolean reflections;
+    Boolean refractions;
+    Boolean transparency;
 } Globals;
 
