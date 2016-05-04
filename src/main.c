@@ -1,6 +1,6 @@
 #include "raytrace.h"
 
-Globals globals;
+GlobalVars globals;
 
 int main(int argc, char ** argv){
     glutInit(&argc, argv);
@@ -8,9 +8,9 @@ int main(int argc, char ** argv){
     glutInitWindowSize (START_WIDTH, START_HEIGHT);
     glutCreateWindow (argv[0]);
     init();
-    //glutReshapeFunc(reshape);
-    //glutDisplayFunc(display);
-    //glutKeyboardFunc(keyboard);
+    glutReshapeFunc(reshape);
+    glutDisplayFunc(display);
+    glutKeyboardFunc(keyboard);
     glutMainLoop();
     
     return(0);

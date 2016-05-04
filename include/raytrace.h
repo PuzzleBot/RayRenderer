@@ -47,11 +47,22 @@ typedef struct{
     int numberOfPoints;
 } Polygon;
 
+typedef struct{
+    Point3D * center;
+    double xLength;
+    double yLength;
+    double zLength;
+    
+    double xAxisRotation;
+    double yAxisRotation;
+    double zAxisRotation;
+} RectPrism;
 
-union{
+typedef union{
     Sphere sphere;
     Polygon polygon;
 } Shape;
+
 
 typedef struct{
     Shape theShape;
@@ -61,9 +72,32 @@ typedef struct{
 /*Global variable structure (Singleton pattern)*/
 typedef struct{
     ShapeData * shapes;
+    int numberOfShapes;
+    
+    GLfloat * pixels;
+    
+    Point3D viewPoint;
+    Polygon viewPlane;
+    
     Boolean ambientDiffuse;
     Boolean reflections;
     Boolean refractions;
     Boolean transparency;
-} Globals;
+} GlobalVars;
+
+/*OpenGL related functions*/
+void init (void);
+void display (void);
+void reshape(int w, int h);
+void keyboard(unsigned char key, int x, int y);
+
+/*Shape functions*/
+Shape sphere_create(Point3D pos, double radius);
+Shape polygon_create(Point3D * points, int numberOfPoints);
+Shape rectPrism_create(Point3D pos, double xLen, double yLen, double zLen,
+                       double xRotation, double yRotation, double zRotation);
+Boolean testIntersection(Shape theShape, Vector3D line);
+Boolean sphereIntersection(Sphere theSphere, Vector3D line);
+Boolean polygonIntersection(Polygon thePoly, Vector3D line);
+
 
