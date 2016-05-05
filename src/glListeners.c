@@ -1,5 +1,6 @@
 #include "raytrace.h"
 
+extern GlobalVars globals;
 
 /*  Initialize material property and light source.
  */

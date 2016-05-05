@@ -1,5 +1,7 @@
 #include "raytrace.h"
 
+extern GlobalVars globals;
+
 /*Shape constructors*/
 Shape sphere_create(Point3D pos, double radius){
     

@@ -28,7 +28,10 @@ typedef struct{
 } Point3D;
 
 typedef struct{
+    /*Position of the vector's start*/
     Point3D position;
+    
+    /*Direction of the vector, stored as a point in relation to the origin*/
     Point3D direction;
 } Vector3D;
 
@@ -46,17 +49,6 @@ typedef struct{
     Vector3D normal;
     int numberOfPoints;
 } Polygon;
-
-typedef struct{
-    Point3D * center;
-    double xLength;
-    double yLength;
-    double zLength;
-    
-    double xAxisRotation;
-    double yAxisRotation;
-    double zAxisRotation;
-} RectPrism;
 
 typedef union{
     Sphere sphere;
@@ -100,4 +92,9 @@ Boolean testIntersection(Shape theShape, Vector3D line);
 Boolean sphereIntersection(Sphere theSphere, Vector3D line);
 Boolean polygonIntersection(Polygon thePoly, Vector3D line);
 
+/*Vector functions*/
+Vector3D crossProduct(Vector3D v1, Vector3D v2);
+double dotProduct(Vector3D v1, Vector3D v2);
+Vector3D normalize(Vector3D v);
+double getLength(Vector3D v);
 
