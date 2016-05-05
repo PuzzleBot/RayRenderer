@@ -50,9 +50,15 @@ typedef struct{
     int numberOfPoints;
 } Polygon;
 
+typedef struct{
+    Point3D points[3];
+    Vector3D normal;
+} Triangle;
+
 typedef union{
     Sphere sphere;
     Polygon polygon;
+    Triangle triangle;
 } Shape;
 
 
@@ -69,7 +75,7 @@ typedef struct{
     GLfloat * pixels;
     
     Point3D viewPoint;
-    Polygon viewPlane;
+    Point3D viewPlane[4];
     
     Boolean ambientDiffuse;
     Boolean reflections;
