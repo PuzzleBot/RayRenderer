@@ -74,6 +74,8 @@ typedef struct{
     
     GLfloat * pixels;
     
+    double planeWidth;
+    double planeHeight;
     Point3D viewPoint;
     Point3D viewPlane[4];
     
@@ -83,17 +85,20 @@ typedef struct{
     Boolean transparency;
 } GlobalVars;
 
+
+/*Parsing and allocation functions*/
+void parseFile(char * inputFilePath);
+void deallocExit(int exitCode);
+
 /*OpenGL related functions*/
-void init (void);
-void display (void);
+void init(void);
+void display(void);
 void reshape(int w, int h);
 void keyboard(unsigned char key, int x, int y);
 
 /*Shape functions*/
 Shape sphere_create(Point3D pos, double radius);
 Shape polygon_create(Point3D * points, int numberOfPoints);
-Shape rectPrism_create(Point3D pos, double xLen, double yLen, double zLen,
-                       double xRotation, double yRotation, double zRotation);
 Boolean testIntersection(Shape theShape, Vector3D line);
 Boolean sphereIntersection(Sphere theSphere, Vector3D line);
 Boolean polygonIntersection(Polygon thePoly, Vector3D line);
@@ -103,4 +108,8 @@ Vector3D crossProduct(Vector3D v1, Vector3D v2);
 double dotProduct(Vector3D v1, Vector3D v2);
 Vector3D normalize(Vector3D v);
 double getLength(Vector3D v);
+
+/*Pixel drawing functions*/
+void drawPixels();
+void insertPixel(int x, int y, GLfloat r, GLfloat g, GLfloat b);
 

@@ -10,4 +10,4 @@ raytracer.o: include/raytrace.h src/main.c
 	clang $(LIBS) $(TARGET) $(INCLUDES) src/*.c -o bin/raytracer.o
 
 run:
-	./raytracer.o
+	./bin/raytracer.o

@@ -2,8 +2,7 @@
 
 extern GlobalVars globals;
 
-/*  Initialize material property and light source.
- */
+/*  Initialize material property and light source. */
 void init(void){
 
 }
@@ -12,7 +11,7 @@ void init(void){
 void display(void){
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    //drawPixels();
+    drawPixels();
     
     glFlush ();
 }
