@@ -37,7 +37,7 @@ typedef struct{
 
 
 /*Shape structures*/
-typedef enum{SPHERE, POLYGON} ShapeType;
+typedef enum{SPHERE, POLYGON, TRIANGLE} ShapeType;
 
 typedef struct{
     Point3D position;
@@ -65,10 +65,15 @@ typedef union{
 typedef struct{
     Shape theShape;
     ShapeType type;
+    double r;
+    double g;
+    double b;
 } ShapeData;
+
 
 /*Global variable structure (Singleton pattern)*/
 typedef struct{
+    /*Both store the same shapes, but one is an array and the other is a list*/
     ShapeData * shapes;
     int numberOfShapes;
     
@@ -88,6 +93,9 @@ typedef struct{
 
 /*Parsing and allocation functions*/
 void parseFile(char * inputFilePath);
+void parseTriangle();
+void parseSphere();
+
 void deallocExit(int exitCode);
 
 /*OpenGL related functions*/

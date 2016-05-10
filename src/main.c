@@ -8,8 +8,8 @@ void initGlobals(){
     
     globals.pixels = calloc(START_WIDTH * START_HEIGHT * 3, sizeof(GLfloat));
     
-    globals.planeWidth = 1.0;
-    globals.planeHeight = 1.0;
+    globals.planeWidth = 102.4;
+    globals.planeHeight = 76.8;
     
     globals.viewPoint.x = 0;
     globals.viewPoint.y = 0;
@@ -53,7 +53,7 @@ int main(int argc, char ** argv){
         parseFile(argv[1]);
     }
     else{
-        parseFile("./inputs/defaultFile");
+        parseFile("./inputs/defaultFile.csv");
     }
     
     glutReshapeFunc(reshape);
