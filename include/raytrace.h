@@ -105,10 +105,10 @@ void reshape(int w, int h);
 void keyboard(unsigned char key, int x, int y);
 
 /*Shape functions*/
-Shape sphere_create(Point3D pos, double radius);
-Shape polygon_create(Point3D * points, int numberOfPoints);
+void printShape(ShapeData shape);
 Boolean testIntersection(Shape theShape, Vector3D line);
 Boolean sphereIntersection(Sphere theSphere, Vector3D line);
+Boolean triangleIntersection(Triangle theSphere, Vector3D line);
 Boolean polygonIntersection(Polygon thePoly, Vector3D line);
 
 /*Vector functions*/
