@@ -56,6 +56,7 @@ int main(int argc, char ** argv){
         parseFile("./inputs/defaultFile.csv");
     }
     
+    display();
     glutReshapeFunc(reshape);
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);

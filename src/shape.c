@@ -21,19 +21,28 @@ void printShape(ShapeData shape){
     printf("\n");
 }
 
-/*Intersection test between a ray and a shape*/
-Boolean testIntersection(Shape theShape, Vector3D line){
+/*Intersection test between a ray and a shape (wrapper containing separate calls for different types of shapes)*/
+Boolean testIntersection(ShapeData shape, Vector3D line){
+    switch(shape.type){
+        case SPHERE:
+            return sphereIntersection(shape.theShape.sphere, line);
+        case TRIANGLE:
+            return triangleIntersection(shape.theShape.triangle, line);
+        case POLYGON:
+            return polygonIntersection(shape.theShape.triangle, line);
+        default:
+            return false;
+    }
+}
+
+Boolean sphereIntersection(Sphere sphere, Vector3D line){
     return false;
 }
 
-Boolean sphereIntersection(Sphere theSphere, Vector3D line){
+Boolean triangleIntersection(Triangle triangle, Vector3D line){
     return false;
 }
 
-Boolean triangleIntersection(Triangle theSphere, Vector3D line){
-    return false;
-}
-
-Boolean polygonIntersection(Polygon thePoly, Vector3D line){
+Boolean polygonIntersection(Polygon poly, Vector3D line){
     return false;
 }
