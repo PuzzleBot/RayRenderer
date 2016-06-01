@@ -29,7 +29,7 @@ Boolean testIntersection(ShapeData shape, Vector3D line){
         case TRIANGLE:
             return triangleIntersection(shape.theShape.triangle, line);
         case POLYGON:
-            return polygonIntersection(shape.theShape.triangle, line);
+            return polygonIntersection(shape.theShape.polygon, line);
         default:
             return false;
     }
