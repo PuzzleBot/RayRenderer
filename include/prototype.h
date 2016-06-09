@@ -29,10 +29,10 @@ void keyboard(unsigned char key, int x, int y);
 
 /*Shape functions*/
 void printShape(ShapeData shape);
-Boolean testIntersection(ShapeData theShape, Vector3D line);
-Boolean sphereIntersection(Sphere theSphere, Vector3D line);
-Boolean triangleIntersection(Triangle theSphere, Vector3D line);
-Boolean polygonIntersection(Polygon thePoly, Vector3D line);
+Boolean testIntersection(ShapeData theShape, Vector3D ray);
+Boolean sphereIntersection(Sphere theSphere, Vector3D ray);
+Boolean triangleIntersection(Triangle theSphere, Vector3D ray);
+Boolean polygonIntersection(Polygon thePoly, Vector3D ray);
 
 /*Vector functions*/
 Vector3D crossProduct(Vector3D v1, Vector3D v2);

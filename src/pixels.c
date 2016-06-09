@@ -6,11 +6,16 @@ void drawPixels(){
     int i;
     int j;
     
+    Vector3D currentRay;
+    currentRay.position = globals.viewPoint;
+    
     for(i = 0; i < START_HEIGHT; i++){
         for(j = 0; j < START_WIDTH; j++){
             
         }
     }
+    
+    glDrawPixels(START_WIDTH, START_HEIGHT, GL_RGB, GL_FLOAT, globals.pixels);
 }
 
 void insertPixel(int x, int y, GLfloat r, GLfloat g, GLfloat b){

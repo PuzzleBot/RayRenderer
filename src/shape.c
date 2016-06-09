@@ -21,28 +21,47 @@ void printShape(ShapeData shape){
     printf("\n");
 }
 
-/*Intersection test between a ray and a shape (wrapper containing separate calls for different types of shapes)*/
-Boolean testIntersection(ShapeData shape, Vector3D line){
+/*Intersection test between a ray and a shape (algorithm dependent on shape type)*/
+Boolean testIntersection(ShapeData shape, Vector3D ray){
     switch(shape.type){
         case SPHERE:
-            return sphereIntersection(shape.theShape.sphere, line);
+            return sphereIntersection(shape.theShape.sphere, ray);
         case TRIANGLE:
-            return triangleIntersection(shape.theShape.triangle, line);
+            return triangleIntersection(shape.theShape.triangle, ray);
         case POLYGON:
-            return polygonIntersection(shape.theShape.polygon, line);
+            return polygonIntersection(shape.theShape.polygon, ray);
         default:
             return false;
     }
 }
 
-Boolean sphereIntersection(Sphere sphere, Vector3D line){
+/*Intersection test for a sphere*/
+Boolean sphereIntersection(Sphere sphere, Vector3D ray){
+    double quadraticA = 1;
+    
+    double quadraticB = 2 * ((ray.direction.x * (ray.position.x - sphere.position.x))
+                              + (ray.direction.y * (ray.position.y - sphere.position.y))
+                                 + (ray.direction.z * (ray.position.z - sphere.position.z)));
+                                 
+    double quadraticC = pow((ray.position.x - sphere.position.x), 2)
+                        + pow((ray.position.y - sphere.position.y), 2)
+                        + pow((ray.position.z - sphere.position.z), 2)
+                        - pow(sphere.radius, 2);
+
+                                 
+    /*Test discriminant, if not negative an intersection exists*/
+    if((pow(quadraticB, 2) - (4 * quadraticA * quadraticC)) >= 0){
+        return true;
+    }
+    
     return false;
 }
 
-Boolean triangleIntersection(Triangle triangle, Vector3D line){
+
+Boolean triangleIntersection(Triangle triangle, Vector3D ray){
     return false;
 }
 
-Boolean polygonIntersection(Polygon poly, Vector3D line){
+Boolean polygonIntersection(Polygon poly, Vector3D ray){
     return false;
 }
