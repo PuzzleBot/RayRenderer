@@ -30,6 +30,12 @@ typedef struct{
     Point3D direction;
 } Vector3D;
 
+typedef struct{
+    GLfloat red;
+    GLfloat green;
+    GLfloat blue;
+} ColourRGB;
+
 
 /*Shape structures*/
 typedef enum{SPHERE, POLYGON, TRIANGLE} ShapeType;
@@ -74,10 +80,15 @@ typedef struct{
     
     GLfloat * pixels;
     
+    /*Width and height of the viewing plane*/
     double planeWidth;
     double planeHeight;
+    
+    /*Viewpoint position: Rays will start from this point*/
     Point3D viewPoint;
-    Point3D viewPlane[4];
+    
+    /*A square defining the viewing plane. Should always be aligned with two axes.*/
+    Point3D viewPlane[2][2];
     
     Boolean ambientDiffuse;
     Boolean reflections;

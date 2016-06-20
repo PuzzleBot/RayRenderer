@@ -6,12 +6,29 @@ void drawPixels(){
     int i;
     int j;
     
+    Point3D currentPlanePosition;
+    double verticalMoveAmount = globals.planeHeight / START_HEIGHT;
+    double horizontalMoveAmount = globals.planeWidth / START_WIDTH;
+    ColourRGB pixelColour;
+    
     Vector3D currentRay;
     currentRay.position = globals.viewPoint;
     
+    /*For each pixel on the screen, calculate pixel colour
+          Pixel colour determined by ray reflecting off of the first intersected object to the light source
+          (If reflectivity and transparency is on, repeat intersection tests for reflected rays)*/
     for(i = 0; i < START_HEIGHT; i++){
         for(j = 0; j < START_WIDTH; j++){
+            currentPlanePosition.x = globals.viewPlane[0][0].x + (j * horizontalMoveAmount);
+            currentPlanePosition.y = globals.viewPlane[0][0].y + (i * verticalMoveAmount);
+            currentPlanePosition.z = globals.viewPlane[0][0].z;
             
+            currentRay.direction.x = currentPlanePosition.x - globals.viewPoint.x;
+            currentRay.direction.y = currentPlanePosition.y - globals.viewPoint.y;
+            currentRay.direction.z = currentPlanePosition.z - globals.viewPoint.z;
+            
+            pixelColour = determinePixelColour(currentRay);
+            insertPixel(j, i, pixelColour.red, pixelColour.green, pixelColour.blue);
         }
     }
     
@@ -22,4 +39,14 @@ void insertPixel(int x, int y, GLfloat r, GLfloat g, GLfloat b){
     globals.pixels[(y * START_WIDTH * 3) + (x * 3)] = r;
     globals.pixels[(y * START_WIDTH * 3) + (x * 3) + 1] = g;
     globals.pixels[(y * START_WIDTH * 3) + (x * 3) + 2] = b;
+}
+
+
+ColourRGB determinePixelColour(Vector3D currentRay){
+    ColourRGB colour;
+    
+    colour.red = 0.0;
+    colour.green = 0.0;
+    colour.blue = 0.0;
+    return(colour);
 }

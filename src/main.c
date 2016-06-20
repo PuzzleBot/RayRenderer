@@ -16,24 +16,24 @@ void initGlobals(){
     globals.viewPoint.z = -globals.planeWidth / 2;
     
     /*Top left corner*/
-    globals.viewPlane[0].x = -globals.planeWidth / 2;
-    globals.viewPlane[0].y = globals.planeHeight / 2;
-    globals.viewPlane[0].z = 0;
+    globals.viewPlane[0][0].x = -globals.planeWidth / 2;
+    globals.viewPlane[0][0].y = globals.planeHeight / 2;
+    globals.viewPlane[0][0].z = 0;
     
     /*Top right corner*/
-    globals.viewPlane[1].x = globals.planeWidth / 2;
-    globals.viewPlane[1].y = globals.planeHeight / 2;
-    globals.viewPlane[1].z = 0;
+    globals.viewPlane[0][1].x = globals.planeWidth / 2;
+    globals.viewPlane[0][1].y = globals.planeHeight / 2;
+    globals.viewPlane[0][1].z = 0;
     
     /*Bottom left corner*/
-    globals.viewPlane[2].x = -globals.planeWidth / 2;
-    globals.viewPlane[2].y = -globals.planeHeight / 2;
-    globals.viewPlane[2].z = 0;
+    globals.viewPlane[1][0].x = -globals.planeWidth / 2;
+    globals.viewPlane[1][0].y = -globals.planeHeight / 2;
+    globals.viewPlane[1][0].z = 0;
     
     /*Bottom right corner*/
-    globals.viewPlane[3].x = -globals.planeWidth / 2;
-    globals.viewPlane[3].y = -globals.planeHeight / 2;
-    globals.viewPlane[3].z = 0;
+    globals.viewPlane[1][1].x = globals.planeWidth / 2;
+    globals.viewPlane[1][1].y = -globals.planeHeight / 2;
+    globals.viewPlane[1][1].z = 0;
     
     globals.ambientDiffuse = true;
     globals.reflections = false;

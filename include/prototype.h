@@ -43,3 +43,4 @@ double getLength(Vector3D v);
 /*Pixel drawing functions*/
 void drawPixels();
 void insertPixel(int x, int y, GLfloat r, GLfloat g, GLfloat b);
+ColourRGB determinePixelColour(Vector3D currentRay);
