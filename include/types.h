@@ -72,11 +72,21 @@ typedef struct{
 } ShapeData;
 
 
+typedef struct{
+    Point3D position;
+    ColourRGB colour;
+} LightData;
+
+
 /*Global variable structure (Singleton pattern)*/
 typedef struct{
-    /*Both store the same shapes, but one is an array and the other is a list*/
+    /*Array of shapes*/
     ShapeData * shapes;
     int numberOfShapes;
+    
+    /*Array of point light sources*/
+    LightData * lights;
+    int numberOfLights;
     
     GLfloat * pixels;
     
@@ -90,8 +100,15 @@ typedef struct{
     /*A square defining the viewing plane. Should always be aligned with two axes.*/
     Point3D viewPlane[2][2];
     
-    Boolean ambientDiffuse;
+    /*Toggles for different effects*/
     Boolean reflections;
     Boolean refractions;
     Boolean transparency;
+    
+    /*Coefficients for the illumination model*/
+    double ambientCoefficient;
+    ColourRGB ambientColour;
+    
+    double lightAttenuation;
+    
 } GlobalVars;

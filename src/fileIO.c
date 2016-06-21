@@ -23,6 +23,9 @@ void parseFile(char * inputFilePath){
             else if(strcmp(shapeToken, "sphere") == 0){
                 parseSphere();
             }
+            else if(strcmp(shapeToken, "light") == 0){
+                parseLight();
+            }
         }
     }
     while((feof(fp) == 0) && (ferror(fp) == 0));
@@ -234,3 +237,9 @@ void parseSphere(){
     printShape(globals.shapes[globals.numberOfShapes]);
     globals.numberOfShapes++;
 }
+
+
+void parseLight(){
+    
+}
+

@@ -18,6 +18,7 @@
 void parseFile(char * inputFilePath);
 void parseTriangle();
 void parseSphere();
+void parseLight();
 
 void deallocExit(int exitCode);
 
@@ -29,7 +30,7 @@ void keyboard(unsigned char key, int x, int y);
 
 /*Shape functions*/
 void printShape(ShapeData shape);
-Point3D testIntersection(ShapeData theShape, Vector3D ray);
+Point3D getIntersection(ShapeData theShape, Vector3D ray);
 Point3D sphereIntersection(Sphere theSphere, Vector3D ray);
 Point3D triangleIntersection(Triangle theSphere, Vector3D ray);
 Point3D polygonIntersection(Polygon thePoly, Vector3D ray);
@@ -44,6 +45,7 @@ double getLength(Point3D start, Point3D end);
 
 /*Ray tracing-specific functions*/
 ColourRGB traceRay(Vector3D ray);
+ShapeData * getFirstIntersectedShape(Vector3D ray);
 
 /*Pixel drawing functions*/
 void drawPixels();

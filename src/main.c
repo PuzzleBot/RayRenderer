@@ -6,6 +6,9 @@ void initGlobals(){
     globals.shapes = NULL;
     globals.numberOfShapes = 0;
     
+    globals.lights = NULL;
+    globals.numberOfLights = 0;
+    
     globals.pixels = calloc(START_WIDTH * START_HEIGHT * 3, sizeof(GLfloat));
     
     globals.planeWidth = 102.4;
@@ -35,10 +38,16 @@ void initGlobals(){
     globals.viewPlane[1][1].y = -globals.planeHeight / 2;
     globals.viewPlane[1][1].z = 0;
     
-    globals.ambientDiffuse = true;
     globals.reflections = false;
     globals.refractions = false;
     globals.transparency = false;
+    
+    globals.ambientCoefficient = 0.2;
+    globals.ambientColour.red = 1.0;
+    globals.ambientColour.green = 1.0;
+    globals.ambientColour.blue = 1.0;
+    
+    globals.lightAttenuation = 0.3;
 }
 
 int main(int argc, char ** argv){
