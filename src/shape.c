@@ -22,7 +22,7 @@ void printShape(ShapeData shape){
 }
 
 /*Intersection test between a ray and a shape (algorithm dependent on shape type)*/
-Boolean testIntersection(ShapeData shape, Vector3D ray){
+Point3D getIntersection(ShapeData shape, Vector3D ray){
     switch(shape.type){
         case SPHERE:
             return sphereIntersection(shape.theShape.sphere, ray);
@@ -31,12 +31,15 @@ Boolean testIntersection(ShapeData shape, Vector3D ray){
         case POLYGON:
             return polygonIntersection(shape.theShape.polygon, ray);
         default:
-            return false;
+            return nullIntersection();
     }
 }
 
 /*Intersection test for a sphere*/
-Boolean sphereIntersection(Sphere sphere, Vector3D ray){
+Point3D sphereIntersection(Sphere sphere, Vector3D ray){
+    Point3D intersection1;
+    Point3D intersection2;
+    
     double quadraticA = 1;
     
     double quadraticB = 2 * ((ray.direction.x * (ray.position.x - sphere.position.x))
@@ -47,21 +50,64 @@ Boolean sphereIntersection(Sphere sphere, Vector3D ray){
                         + pow((ray.position.y - sphere.position.y), 2)
                         + pow((ray.position.z - sphere.position.z), 2)
                         - pow(sphere.radius, 2);
+    
+    double discriminant = (pow(quadraticB, 2) - (4 * quadraticA * quadraticC));
+    
+    double quadraticNegativeT;
+    double quadraticPositiveT;
 
                                  
     /*Test discriminant, if not negative an intersection exists*/
-    if((pow(quadraticB, 2) - (4 * quadraticA * quadraticC)) >= 0){
-        return true;
+    if(discriminant >= 0){
+        quadraticNegativeT = (-quadraticB - sqrt(discriminant)) / 2;
+        quadraticPositiveT = (-quadraticB + sqrt(discriminant)) / 2;
+        
+        intersection1.x = ray.position.x + (ray.direction.x * quadraticNegativeT);
+        intersection1.y = ray.position.y + (ray.direction.y * quadraticNegativeT);
+        intersection1.z = ray.position.z + (ray.direction.z * quadraticNegativeT);
+        
+        intersection2.x = ray.position.x + (ray.direction.x * quadraticPositiveT);
+        intersection2.y = ray.position.y + (ray.direction.y * quadraticPositiveT);
+        intersection2.z = ray.position.z + (ray.direction.z * quadraticPositiveT);
+        
+        if(getLength(ray.position, intersection1) < getLength(ray.position, intersection2)){
+            return(intersection1);
+        }
+        else{
+            return(intersection2);
+        }
     }
     
-    return false;
+    return nullIntersection();
 }
 
 
-Boolean triangleIntersection(Triangle triangle, Vector3D ray){
-    return false;
+Point3D triangleIntersection(Triangle triangle, Vector3D ray){
+    return nullIntersection();
 }
 
-Boolean polygonIntersection(Polygon poly, Vector3D ray){
-    return false;
+Point3D polygonIntersection(Polygon poly, Vector3D ray){
+    return nullIntersection();
+}
+
+
+Point3D nullIntersection(){
+    /*Any intersection point with a negative z can't be seen by the viewplane, and will be considered
+      as a null intersection.*/
+    Point3D nullIntersection;
+    
+    nullIntersection.x = -4.0;
+    nullIntersection.y = -4.0;
+    nullIntersection.z = -999.0;
+    
+    return(nullIntersection);
+}
+
+Boolean isNullIntersection(Point3D intersection){
+    if(intersection.z > 0){
+        return true;
+    }
+    else{
+        return false;
+    }
 }

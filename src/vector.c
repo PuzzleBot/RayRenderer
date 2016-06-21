@@ -19,7 +19,7 @@ double dotProduct(Vector3D v1, Vector3D v2){
 }
 
 Vector3D normalize(Vector3D v){
-    double length = getLength(v);
+    double length = (sqrt(pow(v.direction.x, 2) + pow(v.direction.y, 2) + pow(v.direction.z, 2)));
     
     v.direction.x = v.direction.x / length;
     v.direction.y = v.direction.y / length;
@@ -28,6 +28,6 @@ Vector3D normalize(Vector3D v){
     return v;
 }
 
-double getLength(Vector3D v){
-    return(sqrt(pow(v.direction.x, 2) + pow(v.direction.y, 2) + pow(v.direction.z, 2)));
+double getLength(Point3D start, Point3D end){
+    return(sqrt(pow(end.x - start.x, 2) + pow(end.y - start.y, 2) + pow(end.z - start.z, 2)));
 }

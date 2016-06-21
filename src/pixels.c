@@ -27,7 +27,7 @@ void drawPixels(){
             currentRay.direction.y = currentPlanePosition.y - globals.viewPoint.y;
             currentRay.direction.z = currentPlanePosition.z - globals.viewPoint.z;
             
-            pixelColour = determinePixelColour(currentRay);
+            pixelColour = traceRay(currentRay);
             insertPixel(j, i, pixelColour.red, pixelColour.green, pixelColour.blue);
         }
     }
@@ -39,14 +39,4 @@ void insertPixel(int x, int y, GLfloat r, GLfloat g, GLfloat b){
     globals.pixels[(y * START_WIDTH * 3) + (x * 3)] = r;
     globals.pixels[(y * START_WIDTH * 3) + (x * 3) + 1] = g;
     globals.pixels[(y * START_WIDTH * 3) + (x * 3) + 2] = b;
-}
-
-
-ColourRGB determinePixelColour(Vector3D currentRay){
-    ColourRGB colour;
-    
-    colour.red = 0.0;
-    colour.green = 0.0;
-    colour.blue = 0.0;
-    return(colour);
 }
