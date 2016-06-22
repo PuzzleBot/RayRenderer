@@ -66,9 +66,7 @@ typedef union{
 typedef struct{
     Shape theShape;
     ShapeType type;
-    double r;
-    double g;
-    double b;
+    ColourRGB colour;
 } ShapeData;
 
 

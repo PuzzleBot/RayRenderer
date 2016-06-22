@@ -25,9 +25,11 @@ ColourRGB traceRay(Vector3D ray){
         intersection = getIntersection(*closestShape, ray);
         
         /*Ambient model*/
-        pointColour.red = 0.0;
-        pointColour.green = 0.0;
-        pointColour.blue = 0.0;
+        pointColour.red = globals.ambientColour.red * globals.ambientCoefficient * closestShape->colour.red;
+        pointColour.green = globals.ambientColour.green * globals.ambientCoefficient * closestShape->colour.green;
+        pointColour.blue = globals.ambientColour.blue * globals.ambientCoefficient * closestShape->colour.blue;
+        
+        finalColour = pointColour;
     }
     
     return(finalColour);

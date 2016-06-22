@@ -20,12 +20,13 @@ void drawPixels(){
     for(i = 0; i < START_HEIGHT; i++){
         for(j = 0; j < START_WIDTH; j++){
             currentPlanePosition.x = globals.viewPlane[0][0].x + (j * horizontalMoveAmount);
-            currentPlanePosition.y = globals.viewPlane[0][0].y + (i * verticalMoveAmount);
+            currentPlanePosition.y = globals.viewPlane[0][0].y - (i * verticalMoveAmount);
             currentPlanePosition.z = globals.viewPlane[0][0].z;
             
             currentRay.direction.x = currentPlanePosition.x - globals.viewPoint.x;
             currentRay.direction.y = currentPlanePosition.y - globals.viewPoint.y;
             currentRay.direction.z = currentPlanePosition.z - globals.viewPoint.z;
+            currentRay = normalize(currentRay);
             
             pixelColour = traceRay(currentRay);
             insertPixel(j, i, pixelColour.red, pixelColour.green, pixelColour.blue);

@@ -17,7 +17,7 @@ void printShape(ShapeData shape){
         printf("\tRadius: %.2f\n", shape.theShape.sphere.radius);
     }
     
-    printf("\tColour: %.2f, %.2f, %.2f\n", shape.r, shape.g, shape.b);
+    printf("\tColour: %.2f, %.2f, %.2f\n", shape.colour.red, shape.colour.green, shape.colour.blue);
     printf("\n");
 }
 
@@ -104,7 +104,7 @@ Point3D nullIntersection(){
 }
 
 Boolean isNullIntersection(Point3D intersection){
-    if(intersection.z > 0){
+    if(intersection.z < -1){
         return true;
     }
     else{

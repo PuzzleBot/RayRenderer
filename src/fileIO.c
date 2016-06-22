@@ -128,7 +128,7 @@ void parseTriangle(){
     /*Colour*/
     token = strtok(NULL, ", \t\n");
     if(token != NULL){
-        parsedShape.r = atof(token);
+        parsedShape.colour.red = (GLfloat)atof(token);
     }
     else{
         printf("Parse error: Missing parameter for shape %d (triangle): Red colour amount.\n", globals.numberOfShapes);
@@ -137,7 +137,7 @@ void parseTriangle(){
     
     token = strtok(NULL, ", \t\n");
     if(token != NULL){
-        parsedShape.g = atof(token);
+        parsedShape.colour.green = (GLfloat)atof(token);
     }
     else{
         printf("Parse error: Missing parameter for shape %d (triangle): Green colour amount.\n", globals.numberOfShapes);
@@ -146,7 +146,7 @@ void parseTriangle(){
     
     token = strtok(NULL, ", \t\n");
     if(token != NULL){
-        parsedShape.b = atof(token);
+        parsedShape.colour.blue = (GLfloat)atof(token);
     }
     else{
         printf("Parse error: Missing parameter for shape %d (triangle): Blue colour amount.\n", globals.numberOfShapes);
@@ -207,7 +207,7 @@ void parseSphere(){
     /*Colour*/
     token = strtok(NULL, ", \t\n");
     if(token != NULL){
-        parsedShape.r = atof(token);
+        parsedShape.colour.red = (GLfloat)atof(token);
     }
     else{
         printf("Parse error: Missing parameter for shape %d (sphere): Red colour amount.\n", globals.numberOfShapes);
@@ -216,7 +216,7 @@ void parseSphere(){
     
     token = strtok(NULL, ", \t\n");
     if(token != NULL){
-        parsedShape.g = atof(token);
+        parsedShape.colour.green = (GLfloat)atof(token);
     }
     else{
         printf("Parse error: Missing parameter for shape %d (sphere): Green colour amount.\n", globals.numberOfShapes);
@@ -225,7 +225,7 @@ void parseSphere(){
     
     token = strtok(NULL, ", \t\n");
     if(token != NULL){
-        parsedShape.b = atof(token);
+        parsedShape.colour.blue = (GLfloat)atof(token);
     }
     else{
         printf("Parse error: Missing parameter for shape %d (sphere): Blue colour amount.\n", globals.numberOfShapes);
