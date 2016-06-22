@@ -9,6 +9,9 @@ ColourRGB traceRay(Vector3D ray){
     ColourRGB finalColour;
     
     ColourRGB pointColour;
+    ColourRGB diffuseComponent;
+    ColourRGB specularComponent;
+    
     ColourRGB reflectColour;
     ColourRGB refractColour;
     
@@ -28,6 +31,8 @@ ColourRGB traceRay(Vector3D ray){
         pointColour.red = globals.ambientColour.red * globals.ambientCoefficient * closestShape->colour.red;
         pointColour.green = globals.ambientColour.green * globals.ambientCoefficient * closestShape->colour.green;
         pointColour.blue = globals.ambientColour.blue * globals.ambientCoefficient * closestShape->colour.blue;
+        
+        /*Diffuse and specular model*/
         
         finalColour = pointColour;
     }

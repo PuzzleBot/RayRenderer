@@ -240,6 +240,68 @@ void parseSphere(){
 
 
 void parseLight(){
+    char * token;
+    LightData parsedLight;
     
+    /*Center coordinates*/
+    token = strtok(NULL, ", \t\n");
+    if(token != NULL){
+        parsedLight.position.x = atof(token);
+    }
+    else{
+        printf("Parse error: Missing parameter for light %d: x position.\n", globals.numberOfLights);
+        return;
+    }
+    
+    token = strtok(NULL, ", \t\n");
+    if(token != NULL){
+        parsedLight.position.y = atof(token);
+    }
+    else{
+        printf("Parse error: Missing parameter for light %d: y position.\n", globals.numberOfLights);
+        return;
+    }
+    
+    token = strtok(NULL, ", \t\n");
+    if(token != NULL){
+        parsedLight.position.z = atof(token);
+    }
+    else{
+        printf("Parse error: Missing parameter for light %d: z position.\n", globals.numberOfLights);
+        return;
+    }
+    
+    /*Colour*/
+    token = strtok(NULL, ", \t\n");
+    if(token != NULL){
+        parsedLight.colour.red = (GLfloat)atof(token);
+    }
+    else{
+        printf("Parse error: Missing parameter for light %d: Red colour amount.\n", globals.numberOfLights);
+        return;
+    }
+    
+    token = strtok(NULL, ", \t\n");
+    if(token != NULL){
+        parsedLight.colour.green = (GLfloat)atof(token);
+    }
+    else{
+        printf("Parse error: Missing parameter for light %d: Green colour amount.\n", globals.numberOfLights);
+        return;
+    }
+    
+    token = strtok(NULL, ", \t\n");
+    if(token != NULL){
+        parsedLight.colour.blue = (GLfloat)atof(token);
+    }
+    else{
+        printf("Parse error: Missing parameter for light %d: Blue colour amount.\n", globals.numberOfLights);
+        return;
+    }
+    
+    globals.lights = realloc(globals.lights, sizeof(LightData) * (globals.numberOfLights + 1));
+    globals.lights[globals.numberOfLights] = parsedLight;
+    printLight(globals.lights[globals.numberOfLights]);
+    globals.numberOfLights++;
 }
 

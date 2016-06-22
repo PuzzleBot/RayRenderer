@@ -30,6 +30,7 @@ void keyboard(unsigned char key, int x, int y);
 
 /*Shape functions*/
 void printShape(ShapeData shape);
+void printLight(LightData light);
 Point3D getIntersection(ShapeData theShape, Vector3D ray);
 Point3D sphereIntersection(Sphere theSphere, Vector3D ray);
 Point3D triangleIntersection(Triangle theSphere, Vector3D ray);

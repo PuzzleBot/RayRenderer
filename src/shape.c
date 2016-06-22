@@ -21,6 +21,13 @@ void printShape(ShapeData shape){
     printf("\n");
 }
 
+void printLight(LightData light){
+    printf("Light contents:\n");
+    printf("\tPosition: %.2f, %.2f, %.2f\n", light.position.x, light.position.y, light.position.z);
+    printf("\tColour: %.2f, %.2f, %.2f\n", light.colour.red, light.colour.green, light.colour.blue);
+    printf("\n");
+}
+
 /*Intersection test between a ray and a shape (algorithm dependent on shape type)*/
 Point3D getIntersection(ShapeData shape, Vector3D ray){
     switch(shape.type){
