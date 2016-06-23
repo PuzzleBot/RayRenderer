@@ -36,11 +36,6 @@ Point3D sphereIntersection(Sphere theSphere, Vector3D ray);
 Point3D triangleIntersection(Triangle theSphere, Vector3D ray);
 Point3D polygonIntersection(Polygon thePoly, Vector3D ray);
 
-Boolean isInRayPath(Vector3D ray, Point3D testPoint);
-
-Point3D nullPoint();
-Boolean isNullPoint(Point3D point);
-
 Vector3D getNormal(ShapeData shape, Point3D pointOnShape);
 Vector3D sphereNormal(Sphere sphere, Point3D pointOnShape);
 Vector3D triangleNormal(Triangle triangle, Point3D pointOnShape);
@@ -48,15 +43,18 @@ Vector3D polygonNormal(Polygon poly, Point3D pointOnShape);
 
 Vector3D getReflection(Vector3D lightToIntersection, Vector3D normal);
 
-/*Vector functions*/
+/*Vector and point functions*/
 Vector3D crossProduct(Vector3D v1, Vector3D v2);
 double dotProduct(Vector3D v1, Vector3D v2);
 Vector3D normalize(Vector3D v);
 double getLength(Point3D start, Point3D end);
+Point3D nullPoint();
+Boolean isNullPoint(Point3D point);
 
 /*Ray tracing-specific functions*/
 ColourRGB traceRay(Vector3D ray, int currentIteration);
 ShapeData * getFirstIntersectedShape(Vector3D ray);
+Boolean isInRayPath(Vector3D ray, Point3D testPoint);
 
 /*Pixel drawing functions*/
 void drawPixels();

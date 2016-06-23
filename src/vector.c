@@ -31,3 +31,24 @@ Vector3D normalize(Vector3D v){
 double getLength(Point3D start, Point3D end){
     return(sqrt(pow(end.x - start.x, 2) + pow(end.y - start.y, 2) + pow(end.z - start.z, 2)));
 }
+
+Point3D nullPoint(){
+    /*Any point with a negative z can't be seen by the viewplane, and will be considered
+     as a null point.*/
+    Point3D nullPoint;
+    
+    nullPoint.x = -4.0;
+    nullPoint.y = -4.0;
+    nullPoint.z = -999.0;
+    
+    return(nullPoint);
+}
+
+Boolean isNullPoint(Point3D point){
+    if(point.z < -1){
+        return true;
+    }
+    else{
+        return false;
+    }
+}

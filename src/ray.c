@@ -185,3 +185,35 @@ ShapeData * getFirstIntersectedShape(Vector3D ray){
     
     return(closestShape);
 }
+
+
+Boolean isInRayPath(Vector3D ray, Point3D testPoint){
+    Vector3D rayToPoint;
+    double dotValue;
+    double radianAngle;
+    
+    rayToPoint.position = ray.position;
+    rayToPoint.direction.x = testPoint.x - rayToPoint.position.x;
+    rayToPoint.direction.y = testPoint.y - rayToPoint.position.y;
+    rayToPoint.direction.z = testPoint.z - rayToPoint.position.z;
+    
+    ray = normalize(ray);
+    rayToPoint = normalize(rayToPoint);
+    
+    dotValue = dotProduct(ray, rayToPoint);
+    if(dotValue > 1){
+        dotValue = 1;
+    }
+    else if(dotValue < -1){
+        dotValue = -1;
+    }
+    
+    radianAngle = acos(dotValue);
+    
+    if((radianAngle > (-M_PI / 2)) && (radianAngle < (M_PI / 2))){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
