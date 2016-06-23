@@ -52,6 +52,8 @@ void initGlobals(){
     globals.specularFiness = 4;
     
     globals.lightAttenuation = 0.3;
+    
+    globals.maxTraceIterations = 8;
 }
 
 int main(int argc, char ** argv){

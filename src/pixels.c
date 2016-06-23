@@ -28,7 +28,7 @@ void drawPixels(){
             currentRay.direction.z = currentPlanePosition.z - globals.viewPoint.z;
             currentRay = normalize(currentRay);
             
-            pixelColour = traceRay(currentRay);
+            pixelColour = traceRay(currentRay, 0);
             insertPixel(j, i, pixelColour.red, pixelColour.green, pixelColour.blue);
         }
     }

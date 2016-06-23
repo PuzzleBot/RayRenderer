@@ -2,7 +2,7 @@
 
 extern GlobalVars globals;
 
-ColourRGB traceRay(Vector3D ray){
+ColourRGB traceRay(Vector3D ray, int currentIteration){
     int i;
     
     ShapeData * closestShape = NULL;
@@ -19,11 +19,24 @@ ColourRGB traceRay(Vector3D ray){
     
     Vector3D shapeNormal;          // N
     Vector3D shapeToLightVector;   // L
-    Vector3D reflectVector;        // R
+    Vector3D lightReflectVector;   // R
     Vector3D shapeToViewVector;    // V
     
     ColourRGB reflectColour;
+    Vector3D viewReflectVector;
+    
     ColourRGB refractColour;
+    
+    
+    if(currentIteration >= globals.maxTraceIterations){
+        /*Limit number of reflections/refractions processed*/
+        finalColour.red = 0.0;
+        finalColour.green = 0.0;
+        finalColour.blue = 0.0;
+        
+        return(finalColour);
+    }
+    
     
     /*Get the first intersected shape*/
     closestShape = getFirstIntersectedShape(ray);
@@ -71,8 +84,8 @@ ColourRGB traceRay(Vector3D ray){
             blockingShape = getFirstIntersectedShape(shapeToLightVector);
             if(blockingShape == NULL){
                 
-                reflectVector = getReflection(shapeToLightVector, shapeNormal);
-                reflectVector = normalize(reflectVector);
+                lightReflectVector = getReflection(shapeToLightVector, shapeNormal);
+                lightReflectVector = normalize(lightReflectVector);
                 
                 /*Diffuse component*/
                 diffuseComponent.red = diffuseComponent.red
@@ -94,17 +107,17 @@ ColourRGB traceRay(Vector3D ray){
                 specularComponent.red = specularComponent.red
                 + (globals.specularCoefficient
                    * globals.lights[i].colour.red
-                   * pow(dotProduct(reflectVector, shapeToViewVector), globals.specularFiness));
+                   * pow(dotProduct(lightReflectVector, shapeToViewVector), globals.specularFiness));
                 
                 specularComponent.green = specularComponent.green
                 + (globals.specularCoefficient
                    * globals.lights[i].colour.green
-                   * pow(dotProduct(reflectVector, shapeToViewVector), globals.specularFiness));
+                   * pow(dotProduct(lightReflectVector, shapeToViewVector), globals.specularFiness));
                 
                 specularComponent.blue = specularComponent.blue
                 + (globals.specularCoefficient
                    * globals.lights[i].colour.blue
-                   * pow(dotProduct(reflectVector, shapeToViewVector), globals.specularFiness));
+                   * pow(dotProduct(lightReflectVector, shapeToViewVector), globals.specularFiness));
                 
                 /*All together*/
                 pointColour.red = pointColour.red
@@ -120,10 +133,21 @@ ColourRGB traceRay(Vector3D ray){
                    * (diffuseComponent.blue + specularComponent.blue));
                 
             }/*Shadow check end*/
+        }/*Light involvement end*/
+        
+        /*Reflection*/
+        if((globals.reflections == true) && (closestShape->reflectivity > 0.01)){
+            viewReflectVector = getReflection(ray, shapeNormal);
+            reflectColour = traceRay(viewReflectVector, currentIteration++);
+            
+            finalColour.red = reflectColour.red;
+            finalColour.green = reflectColour.green;
+            finalColour.blue = reflectColour.blue;
         }
         
-        
-        finalColour = pointColour;
+        finalColour.red = finalColour.red + pointColour.red;
+        finalColour.green = finalColour.green + pointColour.green;
+        finalColour.blue = finalColour.blue + pointColour.blue;
     }
     
     return(finalColour);

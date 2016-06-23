@@ -67,6 +67,7 @@ typedef struct{
     Shape theShape;
     ShapeType type;
     ColourRGB colour;
+    double reflectivity;
 } ShapeData;
 
 
@@ -110,7 +111,9 @@ typedef struct{
     double diffuseCoefficient;
     double specularCoefficient;
     int specularFiness;
-    
     double lightAttenuation;
+    
+    /*Maximum number of reflections and refractions*/
+    int maxTraceIterations;
     
 } GlobalVars;

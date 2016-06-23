@@ -55,7 +55,7 @@ Vector3D normalize(Vector3D v);
 double getLength(Point3D start, Point3D end);
 
 /*Ray tracing-specific functions*/
-ColourRGB traceRay(Vector3D ray);
+ColourRGB traceRay(Vector3D ray, int currentIteration);
 ShapeData * getFirstIntersectedShape(Vector3D ray);
 
 /*Pixel drawing functions*/

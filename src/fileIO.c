@@ -153,6 +153,15 @@ void parseTriangle(){
         return;
     }
     
+    token = strtok(NULL, ", \t\n");
+    if(token != NULL){
+        parsedShape.reflectivity = atof(token);
+    }
+    else{
+        printf("Parse error: Missing parameter for shape %d (triangle): Reflectivity.\n", globals.numberOfShapes);
+        return;
+    }
+    
     globals.shapes = realloc(globals.shapes, sizeof(ShapeData) * (globals.numberOfShapes + 1));
     globals.shapes[globals.numberOfShapes] = parsedShape;
     printShape(globals.shapes[globals.numberOfShapes]);
@@ -229,6 +238,15 @@ void parseSphere(){
     }
     else{
         printf("Parse error: Missing parameter for shape %d (sphere): Blue colour amount.\n", globals.numberOfShapes);
+        return;
+    }
+    
+    token = strtok(NULL, ", \t\n");
+    if(token != NULL){
+        parsedShape.reflectivity = atof(token);
+    }
+    else{
+        printf("Parse error: Missing parameter for shape %d (sphere): Reflectivity.\n", globals.numberOfShapes);
         return;
     }
     
