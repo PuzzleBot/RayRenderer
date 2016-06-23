@@ -59,9 +59,9 @@ ColourRGB traceRay(Vector3D ray){
         
         for(i = 0; i < globals.numberOfLights; i++){
             lightToShapeVector.position = globals.lights[i].position;
-            lightToShapeVector.direction.x = intersection.x - globals.lights[i].position.x;
-            lightToShapeVector.direction.y = intersection.y - globals.lights[i].position.y;
-            lightToShapeVector.direction.z = intersection.z - globals.lights[i].position.z;
+            lightToShapeVector.direction.x = -intersection.x + globals.lights[i].position.x;
+            lightToShapeVector.direction.y = -intersection.y + globals.lights[i].position.y;
+            lightToShapeVector.direction.z = -intersection.z + globals.lights[i].position.z;
             lightToShapeVector = normalize(lightToShapeVector);
             
             reflectVector = getReflection(lightToShapeVector, shapeNormal);

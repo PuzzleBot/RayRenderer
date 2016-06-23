@@ -14,14 +14,14 @@ void drawPixels(){
     Vector3D currentRay;
     currentRay.position = globals.viewPoint;
     
-    /*For each pixel on the screen, calculate pixel colour
+    /*For each pixel on the screen, calculate pixel colour (bottom-left to top-right)
           Pixel colour determined by ray reflecting off of the first intersected object to the light source
           (If reflectivity and transparency is on, repeat intersection tests for reflected rays)*/
     for(i = 0; i < START_HEIGHT; i++){
         for(j = 0; j < START_WIDTH; j++){
-            currentPlanePosition.x = globals.viewPlane[0][0].x + (j * horizontalMoveAmount);
-            currentPlanePosition.y = globals.viewPlane[0][0].y - (i * verticalMoveAmount);
-            currentPlanePosition.z = globals.viewPlane[0][0].z;
+            currentPlanePosition.x = globals.viewPlane[1][0].x + (j * horizontalMoveAmount);
+            currentPlanePosition.y = globals.viewPlane[1][0].y + (i * verticalMoveAmount);
+            currentPlanePosition.z = globals.viewPlane[1][0].z;
             
             currentRay.direction.x = currentPlanePosition.x - globals.viewPoint.x;
             currentRay.direction.y = currentPlanePosition.y - globals.viewPoint.y;
