@@ -8,6 +8,9 @@ ColourRGB traceRay(Vector3D ray){
     ShapeData * closestShape = NULL;
     Point3D intersection;
     
+    /*Another shape intersected by the shape-to-light vector*/
+    ShapeData * blockingShape = NULL;
+    
     ColourRGB finalColour;
     
     ColourRGB pointColour;
@@ -15,7 +18,7 @@ ColourRGB traceRay(Vector3D ray){
     ColourRGB specularComponent;
     
     Vector3D shapeNormal;          // N
-    Vector3D lightToShapeVector;   // L
+    Vector3D shapeToLightVector;   // L
     Vector3D reflectVector;        // R
     Vector3D shapeToViewVector;    // V
     
@@ -58,60 +61,65 @@ ColourRGB traceRay(Vector3D ray){
         specularComponent.blue = 0.0;
         
         for(i = 0; i < globals.numberOfLights; i++){
-            lightToShapeVector.position = globals.lights[i].position;
-            lightToShapeVector.direction.x = -intersection.x + globals.lights[i].position.x;
-            lightToShapeVector.direction.y = -intersection.y + globals.lights[i].position.y;
-            lightToShapeVector.direction.z = -intersection.z + globals.lights[i].position.z;
-            lightToShapeVector = normalize(lightToShapeVector);
+            shapeToLightVector.position = intersection;
+            shapeToLightVector.direction.x = globals.lights[i].position.x - intersection.x;
+            shapeToLightVector.direction.y = globals.lights[i].position.y - intersection.y;
+            shapeToLightVector.direction.z = globals.lights[i].position.z - intersection.z;
+            shapeToLightVector = normalize(shapeToLightVector);
             
-            reflectVector = getReflection(lightToShapeVector, shapeNormal);
-            reflectVector = normalize(reflectVector);
-            
-            /*Diffuse component*/
-            diffuseComponent.red = diffuseComponent.red
-            + (globals.diffuseCoefficient
-               * closestShape->colour.red
-               * dotProduct(shapeNormal, lightToShapeVector));
-            
-            diffuseComponent.green = diffuseComponent.green
-            + (globals.diffuseCoefficient
-               * closestShape->colour.green
-               * dotProduct(shapeNormal, lightToShapeVector));
-            
-            diffuseComponent.blue = diffuseComponent.blue
-            + (globals.diffuseCoefficient
-               * closestShape->colour.blue
-               * dotProduct(shapeNormal, lightToShapeVector));
-            
-            /*Specular component*/
-            specularComponent.red = specularComponent.red
-            + (globals.specularCoefficient
-               * globals.lights[i].colour.red
-               * pow(dotProduct(reflectVector, shapeToViewVector), globals.specularFiness));
-            
-            specularComponent.green = specularComponent.green
-            + (globals.specularCoefficient
-               * globals.lights[i].colour.green
-               * pow(dotProduct(reflectVector, shapeToViewVector), globals.specularFiness));
-            
-            specularComponent.blue = specularComponent.blue
-            + (globals.specularCoefficient
-               * globals.lights[i].colour.blue
-               * pow(dotProduct(reflectVector, shapeToViewVector), globals.specularFiness));
-            
-            /*All together*/
-            pointColour.red = pointColour.red
-            + ((globals.lightAttenuation * globals.lights[i].colour.red)
-               * (diffuseComponent.red + specularComponent.red));
-            
-            pointColour.green = pointColour.green
-            + ((globals.lightAttenuation * globals.lights[i].colour.green)
-               * (diffuseComponent.green + specularComponent.green));
-               
-            pointColour.blue = pointColour.blue
-            + ((globals.lightAttenuation * globals.lights[i].colour.blue)
-               * (diffuseComponent.blue + specularComponent.blue));
-               
+            /*Shadow check*/
+            blockingShape = getFirstIntersectedShape(shapeToLightVector);
+            if(blockingShape == NULL){
+                
+                reflectVector = getReflection(shapeToLightVector, shapeNormal);
+                reflectVector = normalize(reflectVector);
+                
+                /*Diffuse component*/
+                diffuseComponent.red = diffuseComponent.red
+                + (globals.diffuseCoefficient
+                   * closestShape->colour.red
+                   * dotProduct(shapeNormal, shapeToLightVector));
+                
+                diffuseComponent.green = diffuseComponent.green
+                + (globals.diffuseCoefficient
+                   * closestShape->colour.green
+                   * dotProduct(shapeNormal, shapeToLightVector));
+                
+                diffuseComponent.blue = diffuseComponent.blue
+                + (globals.diffuseCoefficient
+                   * closestShape->colour.blue
+                   * dotProduct(shapeNormal, shapeToLightVector));
+                
+                /*Specular component*/
+                specularComponent.red = specularComponent.red
+                + (globals.specularCoefficient
+                   * globals.lights[i].colour.red
+                   * pow(dotProduct(reflectVector, shapeToViewVector), globals.specularFiness));
+                
+                specularComponent.green = specularComponent.green
+                + (globals.specularCoefficient
+                   * globals.lights[i].colour.green
+                   * pow(dotProduct(reflectVector, shapeToViewVector), globals.specularFiness));
+                
+                specularComponent.blue = specularComponent.blue
+                + (globals.specularCoefficient
+                   * globals.lights[i].colour.blue
+                   * pow(dotProduct(reflectVector, shapeToViewVector), globals.specularFiness));
+                
+                /*All together*/
+                pointColour.red = pointColour.red
+                + ((globals.lightAttenuation * globals.lights[i].colour.red)
+                   * (diffuseComponent.red + specularComponent.red));
+                
+                pointColour.green = pointColour.green
+                + ((globals.lightAttenuation * globals.lights[i].colour.green)
+                   * (diffuseComponent.green + specularComponent.green));
+                
+                pointColour.blue = pointColour.blue
+                + ((globals.lightAttenuation * globals.lights[i].colour.blue)
+                   * (diffuseComponent.blue + specularComponent.blue));
+                
+            }/*Shadow check end*/
         }
         
         
@@ -143,8 +151,8 @@ ShapeData * getFirstIntersectedShape(Vector3D ray){
              (Dev note: When implementing transparency, keep a structure sorting the shapes
              from closest to farthest instead of doing this)*/
             /*IntersectionLength > 0.01 is there to ignore any intersections of rays starting from
-              a shape going to the same shape.*/
-            if((currentIntersectionLength > 0.01) && ((currentIntersectionLength < closestIntersectionLength) || (closestIntersectionLength < -1))){
+             a shape going to the same shape.*/
+            if((currentIntersectionLength < closestIntersectionLength) || (closestIntersectionLength < -1)){
                 closestIntersectionLength = currentIntersectionLength;
                 closestShape = &globals.shapes[i];
             }

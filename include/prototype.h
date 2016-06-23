@@ -36,6 +36,8 @@ Point3D sphereIntersection(Sphere theSphere, Vector3D ray);
 Point3D triangleIntersection(Triangle theSphere, Vector3D ray);
 Point3D polygonIntersection(Polygon thePoly, Vector3D ray);
 
+Boolean isInRayPath(Vector3D ray, Point3D testPoint);
+
 Point3D nullPoint();
 Boolean isNullPoint(Point3D point);
 
