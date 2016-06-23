@@ -135,19 +135,19 @@ ColourRGB traceRay(Vector3D ray, int currentIteration){
             }/*Shadow check end*/
         }/*Light involvement end*/
         
+        finalColour.red = pointColour.red;
+        finalColour.green = pointColour.green;
+        finalColour.blue = pointColour.blue;
+        
         /*Reflection*/
         if((globals.reflections == true) && (closestShape->reflectivity > 0.01)){
             viewReflectVector = getReflection(ray, shapeNormal);
-            reflectColour = traceRay(viewReflectVector, currentIteration++);
+            reflectColour = traceRay(viewReflectVector, currentIteration + 1);
             
-            finalColour.red = reflectColour.red;
-            finalColour.green = reflectColour.green;
-            finalColour.blue = reflectColour.blue;
+            finalColour.red = finalColour.red + (reflectColour.red * closestShape->reflectivity);
+            finalColour.green = finalColour.green + (reflectColour.green * closestShape->reflectivity);
+            finalColour.blue = finalColour.blue + (reflectColour.blue  * closestShape->reflectivity);
         }
-        
-        finalColour.red = finalColour.red + pointColour.red;
-        finalColour.green = finalColour.green + pointColour.green;
-        finalColour.blue = finalColour.blue + pointColour.blue;
     }
     
     return(finalColour);

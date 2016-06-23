@@ -67,7 +67,7 @@ typedef struct{
     Shape theShape;
     ShapeType type;
     ColourRGB colour;
-    double reflectivity;
+    GLfloat reflectivity;
 } ShapeData;
 
 

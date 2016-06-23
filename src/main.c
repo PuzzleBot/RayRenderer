@@ -38,7 +38,7 @@ void initGlobals(){
     globals.viewPlane[1][1].y = -globals.planeHeight / 2;
     globals.viewPlane[1][1].z = 0;
     
-    globals.reflections = false;
+    globals.reflections = true;
     globals.refractions = false;
     globals.transparency = false;
     
@@ -51,7 +51,7 @@ void initGlobals(){
     globals.specularCoefficient = 0.4;
     globals.specularFiness = 4;
     
-    globals.lightAttenuation = 0.3;
+    globals.lightAttenuation = 0.8;
     
     globals.maxTraceIterations = 8;
 }
@@ -60,7 +60,7 @@ int main(int argc, char ** argv){
     glutInit(&argc, argv);
     glutInitDisplayMode (GLUT_SINGLE | GLUT_RGBA | GLUT_DEPTH);
     glutInitWindowSize (START_WIDTH, START_HEIGHT);
-    glutCreateWindow (argv[0]);
+    glutCreateWindow("Ray Renderer, by Brandon Tan");
     initGlobals();
     init();
     
@@ -83,6 +83,10 @@ int main(int argc, char ** argv){
 void deallocExit(int exitCode){
     if(globals.shapes != NULL){
         free(globals.shapes);
+    }
+    
+    if(globals.lights != NULL){
+        free(globals.lights);
     }
     
     free(globals.pixels);
