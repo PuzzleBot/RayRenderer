@@ -107,6 +107,10 @@ typedef struct{
     double ambientCoefficient;
     ColourRGB ambientColour;
     
+    double diffuseCoefficient;
+    double specularCoefficient;
+    int specularFiness;
+    
     double lightAttenuation;
     
 } GlobalVars;

@@ -35,8 +35,16 @@ Point3D getIntersection(ShapeData theShape, Vector3D ray);
 Point3D sphereIntersection(Sphere theSphere, Vector3D ray);
 Point3D triangleIntersection(Triangle theSphere, Vector3D ray);
 Point3D polygonIntersection(Polygon thePoly, Vector3D ray);
-Point3D nullIntersection();
-Boolean isNullIntersection(Point3D intersection);
+
+Point3D nullPoint();
+Boolean isNullPoint(Point3D point);
+
+Vector3D getNormal(ShapeData shape, Point3D pointOnShape);
+Vector3D sphereNormal(Sphere sphere, Point3D pointOnShape);
+Vector3D triangleNormal(Triangle triangle, Point3D pointOnShape);
+Vector3D polygonNormal(Polygon poly, Point3D pointOnShape);
+
+Vector3D getReflection(Vector3D lightToIntersection, Vector3D normal);
 
 /*Vector functions*/
 Vector3D crossProduct(Vector3D v1, Vector3D v2);

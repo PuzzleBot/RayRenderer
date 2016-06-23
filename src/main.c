@@ -47,6 +47,10 @@ void initGlobals(){
     globals.ambientColour.green = 1.0;
     globals.ambientColour.blue = 1.0;
     
+    globals.diffuseCoefficient = 0.4;
+    globals.specularCoefficient = 0.4;
+    globals.specularFiness = 4;
+    
     globals.lightAttenuation = 0.3;
 }
 

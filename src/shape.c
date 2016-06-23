@@ -38,7 +38,7 @@ Point3D getIntersection(ShapeData shape, Vector3D ray){
         case POLYGON:
             return polygonIntersection(shape.theShape.polygon, ray);
         default:
-            return nullIntersection();
+            return nullPoint();
     }
 }
 
@@ -85,36 +85,95 @@ Point3D sphereIntersection(Sphere sphere, Vector3D ray){
         }
     }
     
-    return nullIntersection();
+    return nullPoint();
 }
 
 
 Point3D triangleIntersection(Triangle triangle, Vector3D ray){
-    return nullIntersection();
+    return nullPoint();
 }
 
 Point3D polygonIntersection(Polygon poly, Vector3D ray){
-    return nullIntersection();
+    return nullPoint();
 }
 
 
-Point3D nullIntersection(){
+Point3D nullPoint(){
     /*Any intersection point with a negative z can't be seen by the viewplane, and will be considered
       as a null intersection.*/
-    Point3D nullIntersection;
+    Point3D nullPoint;
     
-    nullIntersection.x = -4.0;
-    nullIntersection.y = -4.0;
-    nullIntersection.z = -999.0;
+    nullPoint.x = -4.0;
+    nullPoint.y = -4.0;
+    nullPoint.z = -999.0;
     
-    return(nullIntersection);
+    return(nullPoint);
 }
 
-Boolean isNullIntersection(Point3D intersection){
-    if(intersection.z < -1){
+Boolean isNullPoint(Point3D point){
+    if(point.z < -1){
         return true;
     }
     else{
         return false;
     }
+}
+
+
+
+
+Vector3D getNormal(ShapeData shape, Point3D pointOnShape){
+    Vector3D nullVector;
+    
+    switch(shape.type){
+        case SPHERE:
+            return sphereNormal(shape.theShape.sphere, pointOnShape);
+        case TRIANGLE:
+            return triangleNormal(shape.theShape.triangle, pointOnShape);
+        case POLYGON:
+            return polygonNormal(shape.theShape.polygon, pointOnShape);
+        default:
+            nullVector.position = pointOnShape;
+            nullVector.direction = nullPoint();
+            return nullVector;
+    }
+}
+
+Vector3D sphereNormal(Sphere sphere, Point3D pointOnShape){
+    Vector3D normalVector;
+    
+    normalVector.position = pointOnShape;
+    
+    normalVector.direction.x = (pointOnShape.x - sphere.position.x) / sphere.radius;
+    normalVector.direction.y = (pointOnShape.y - sphere.position.y) / sphere.radius;
+    normalVector.direction.z = (pointOnShape.z - sphere.position.z) / sphere.radius;
+    
+    return normalVector;
+}
+
+Vector3D triangleNormal(Triangle triangle, Point3D pointOnShape){
+    Vector3D nullVector;
+    
+    nullVector.position = pointOnShape;
+    nullVector.direction = nullPoint();
+    return nullVector;
+}
+
+Vector3D polygonNormal(Polygon poly, Point3D pointOnShape){
+    Vector3D nullVector;
+    
+    nullVector.position = pointOnShape;
+    nullVector.direction = nullPoint();
+    return nullVector;
+}
+
+Vector3D getReflection(Vector3D lightToIntersection, Vector3D normal){
+    Vector3D reflectedRay;
+    double dotValue = -(dotProduct(normal, lightToIntersection));
+    
+    reflectedRay.direction.x = lightToIntersection.direction.x + (2 * normal.direction.x * dotValue);
+    reflectedRay.direction.y = lightToIntersection.direction.y + (2 * normal.direction.y * dotValue);
+    reflectedRay.direction.z = lightToIntersection.direction.z + (2 * normal.direction.z * dotValue);
+    
+    return(reflectedRay);
 }
