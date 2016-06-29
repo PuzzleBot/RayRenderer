@@ -32,6 +32,20 @@ double getLength(Point3D start, Point3D end){
     return(sqrt(pow(end.x - start.x, 2) + pow(end.y - start.y, 2) + pow(end.z - start.z, 2)));
 }
 
+Vector3D pointToVector(Point3D point){
+    Vector3D vector;
+    
+    vector.position.x = 0;
+    vector.position.y = 0;
+    vector.position.z = 0;
+    
+    vector.direction.x = point.x;
+    vector.direction.y = point.y;
+    vector.direction.z = point.z;
+    
+    return(vector);
+}
+
 Point3D nullPoint(){
     /*Any point with a negative z can't be seen by the viewplane, and will be considered
      as a null point.*/

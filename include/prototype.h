@@ -40,6 +40,7 @@ Vector3D getNormal(ShapeData shape, Point3D pointOnShape);
 Vector3D sphereNormal(Sphere sphere, Point3D pointOnShape);
 Vector3D triangleNormal(Triangle triangle, Point3D pointOnShape);
 Vector3D polygonNormal(Polygon poly, Point3D pointOnShape);
+Point3D planeIntersection(Vector3D planeNormal, Vector3D ray);
 
 Vector3D getReflection(Vector3D lightToIntersection, Vector3D normal);
 
@@ -48,6 +49,7 @@ Vector3D crossProduct(Vector3D v1, Vector3D v2);
 double dotProduct(Vector3D v1, Vector3D v2);
 Vector3D normalize(Vector3D v);
 double getLength(Point3D start, Point3D end);
+Vector3D pointToVector(Point3D point);
 Point3D nullPoint();
 Boolean isNullPoint(Point3D point);
 

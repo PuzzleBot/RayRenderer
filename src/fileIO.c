@@ -162,6 +162,8 @@ void parseTriangle(){
         return;
     }
     
+    parsedShape.theShape.triangle.normal = getNormal(parsedShape, parsedShape.theShape.triangle.points[0]);
+    
     globals.shapes = realloc(globals.shapes, sizeof(ShapeData) * (globals.numberOfShapes + 1));
     globals.shapes[globals.numberOfShapes] = parsedShape;
     printShape(globals.shapes[globals.numberOfShapes]);

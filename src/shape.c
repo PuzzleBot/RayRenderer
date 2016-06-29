@@ -59,11 +59,27 @@ Vector3D sphereNormal(Sphere sphere, Point3D pointOnShape){
 }
 
 Vector3D triangleNormal(Triangle triangle, Point3D pointOnShape){
-    Vector3D nullVector;
+    Vector3D planeVector1;
+    Vector3D planeVector2;
     
-    nullVector.position = pointOnShape;
-    nullVector.direction = nullPoint();
-    return nullVector;
+    if(isNullPoint(triangle.normal.direction) == true){
+        planeVector1.position = triangle.points[0];
+        planeVector1.direction.x = triangle.points[1].x - triangle.points[0].x;
+        planeVector1.direction.y = triangle.points[1].y - triangle.points[0].y;
+        planeVector1.direction.z = triangle.points[1].z - triangle.points[0].z;
+        planeVector1 = normalize(planeVector1);
+        
+        planeVector2.position = triangle.points[0];
+        planeVector2.direction.x = triangle.points[2].x - triangle.points[0].x;
+        planeVector2.direction.y = triangle.points[2].y - triangle.points[0].y;
+        planeVector2.direction.z = triangle.points[2].z - triangle.points[0].z;
+        planeVector2 = normalize(planeVector2);
+        
+        return(normalize(crossProduct(planeVector1, planeVector2)));
+    }
+    else{
+        return(triangle.normal);
+    }
 }
 
 Vector3D polygonNormal(Polygon poly, Point3D pointOnShape){

@@ -97,9 +97,38 @@ Point3D sphereIntersection(Sphere sphere, Vector3D ray){
 
 
 Point3D triangleIntersection(Triangle triangle, Vector3D ray){
+    Point3D planePoint = planeIntersection(triangleNormal(triangle, nullPoint()), ray);
+    
     return nullPoint();
 }
 
 Point3D polygonIntersection(Polygon poly, Vector3D ray){
     return nullPoint();
+}
+
+/*http://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection*/
+Point3D planeIntersection(Vector3D planeNormal, Vector3D ray){
+    Point3D intersection;
+    Vector3D planeMinusLine;
+    double scalarLength;
+    double rayNormalDot = dotProduct(ray, planeNormal);
+    
+    if(rayNormalDot < 0.01){
+        /*Ray is parallel to the plane - no intersection*/
+        return nullPoint();
+    }
+    else{
+        planeMinusLine.position = ray.position;
+        planeMinusLine.direction.x = planeNormal.position.x - ray.position.x;
+        planeMinusLine.direction.y = planeNormal.position.y - ray.position.y;
+        planeMinusLine.direction.z = planeNormal.position.z - ray.position.z;
+        
+        scalarLength = dotProduct(planeMinusLine, planeNormal) / rayNormalDot;
+        
+        intersection.x = ray.position.x + (ray.direction.x * scalarLength);
+        intersection.y = ray.position.y + (ray.direction.y * scalarLength);
+        intersection.z = ray.position.z + (ray.direction.z * scalarLength);
+        
+        return(intersection);
+    }
 }
