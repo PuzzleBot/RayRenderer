@@ -18,5 +18,5 @@ Example input files are provided under the "input" directory.
 
 ### Implemented scene objects
 
-sphere
+sphere,
 light (point light source)
