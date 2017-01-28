@@ -10,6 +10,7 @@ void printShape(ShapeData shape){
         printf("\tPoint 1: %.2f, %.2f, %.2f\n", shape.theShape.triangle.points[0].x, shape.theShape.triangle.points[0].y, shape.theShape.triangle.points[0].z);
         printf("\tPoint 2: %.2f, %.2f, %.2f\n", shape.theShape.triangle.points[1].x, shape.theShape.triangle.points[1].y, shape.theShape.triangle.points[1].z);
         printf("\tPoint 3: %.2f, %.2f, %.2f\n", shape.theShape.triangle.points[2].x, shape.theShape.triangle.points[2].y, shape.theShape.triangle.points[2].z);
+        printf("\tNormal: %.2f, %.2f, %.2f\n", shape.theShape.triangle.normal.direction.x, shape.theShape.triangle.normal.direction.y, shape.theShape.triangle.normal.direction.z);
     }
     else if(shape.type == SPHERE){
         printf("\tSphere\n");
@@ -93,6 +94,9 @@ Vector3D polygonNormal(Polygon poly, Point3D pointOnShape){
 Vector3D getReflection(Vector3D lightToIntersection, Vector3D normal){
     Vector3D reflectedRay;
     double dotValue = -(dotProduct(normal, lightToIntersection));
+    //printf("Dot: %.2f\n", dotValue);
+    
+    reflectedRay.position = normal.position;
     
     reflectedRay.direction.x = lightToIntersection.direction.x + (2 * normal.direction.x * dotValue);
     reflectedRay.direction.y = lightToIntersection.direction.y + (2 * normal.direction.y * dotValue);

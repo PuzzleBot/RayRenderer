@@ -6,6 +6,12 @@ void drawPixels(){
     int i;
     int j;
     
+    /*Loading bar variables*/
+    int loadbarSegments = (LOADBAR_WIDTH - 20) / LOADBAR_SEGMENT_PIXELS;
+    int totalPixels = START_WIDTH * START_HEIGHT;
+    int nextLoadSegment = 1;
+    int nextIncrementPixel = totalPixels / loadbarSegments;
+    
     Point3D currentPlanePosition;
     double verticalMoveAmount = globals.planeHeight / START_HEIGHT;
     double horizontalMoveAmount = globals.planeWidth / START_WIDTH;
@@ -13,6 +19,11 @@ void drawPixels(){
     
     Vector3D currentRay;
     currentRay.position = globals.viewPoint;
+    
+    /*Draw the loading bar border*/
+    glWindowPos2i((START_WIDTH - LOADBAR_WIDTH)/2, (START_HEIGHT - LOADBAR_HEIGHT)/2);
+    glDrawPixels(LOADBAR_WIDTH, LOADBAR_HEIGHT, GL_RGB, GL_FLOAT, globals.loadBarPixels);
+    glFlush();
     
     /*For each pixel on the screen, calculate pixel colour (bottom-left to top-right)
           Pixel colour determined by ray reflecting off of the first intersected object to the light source
@@ -29,15 +40,29 @@ void drawPixels(){
             currentRay = normalize(currentRay);
             
             pixelColour = traceRay(currentRay, 0);
-            insertPixel(j, i, pixelColour.red, pixelColour.green, pixelColour.blue);
+            insertPixel(globals.pixels, START_WIDTH, START_HEIGHT, j, i, pixelColour.red, pixelColour.green, pixelColour.blue);
+            
+            /*Update the loading bar accordingly, based on the number of pixels
+              calculated so far out of total pixels*/
+            if((i * START_WIDTH) + j >= nextIncrementPixel){
+                incrementLoadingBar();
+                nextLoadSegment++;
+                nextIncrementPixel = nextLoadSegment * (totalPixels / loadbarSegments);
+            }
         }
     }
+    //free(globals.loadBarPixels);
     
+    glWindowPos2i(0, 0);
     glDrawPixels(START_WIDTH, START_HEIGHT, GL_RGB, GL_FLOAT, globals.pixels);
 }
 
-void insertPixel(int x, int y, GLfloat r, GLfloat g, GLfloat b){
-    globals.pixels[(y * START_WIDTH * 3) + (x * 3)] = r;
-    globals.pixels[(y * START_WIDTH * 3) + (x * 3) + 1] = g;
-    globals.pixels[(y * START_WIDTH * 3) + (x * 3) + 2] = b;
+/*Inserts a pixel colour into an array that will be used for glDrawPixels().
+  Parameters: the array to insert into, width of the array, height of the array, x position
+              to insert to, y position to insert to, r g b colours*/
+void insertPixel(GLfloat * pixelArray, int width, int height, int x, int y, GLfloat r, GLfloat g, GLfloat b){
+    /*Treating a 1D array like a 2D one*/
+    pixelArray[(y * width * 3) + (x * 3)] = r;
+    pixelArray[(y * width * 3) + (x * 3) + 1] = g;
+    pixelArray[(y * width * 3) + (x * 3) + 2] = b;
 }

@@ -49,15 +49,23 @@ Vector3D crossProduct(Vector3D v1, Vector3D v2);
 double dotProduct(Vector3D v1, Vector3D v2);
 Vector3D normalize(Vector3D v);
 double getLength(Point3D start, Point3D end);
+double getLengthFromOrigin(Point3D end);
 Vector3D pointToVector(Point3D point);
+Boolean isInRayPath(Vector3D ray, Point3D testPoint);
+double angleBetween(Vector3D v1, Vector3D v2);
+
+/*Define a "NULL" for points and a check for it*/
 Point3D nullPoint();
 Boolean isNullPoint(Point3D point);
 
 /*Ray tracing-specific functions*/
 ColourRGB traceRay(Vector3D ray, int currentIteration);
 ShapeData * getFirstIntersectedShape(Vector3D ray);
-Boolean isInRayPath(Vector3D ray, Point3D testPoint);
 
 /*Pixel drawing functions*/
 void drawPixels();
-void insertPixel(int x, int y, GLfloat r, GLfloat g, GLfloat b);
+void insertPixel(GLfloat * pixelArray, int width, int height, int x, int y, GLfloat r, GLfloat g, GLfloat b);
+
+/*Interface drawing functions*/
+void initLoadingBar();
+void incrementLoadingBar();

@@ -1,6 +1,7 @@
 #include "raytrace.h"
 
-/*Intersection test between a ray and a shape (algorithm dependent on shape type)*/
+/*Intersection test between a ray and a shape (algorithm dependent on shape type)
+  Sort-of polymorphism*/
 Point3D getIntersection(ShapeData shape, Vector3D ray){
     switch(shape.type){
         case SPHERE:
@@ -95,11 +96,138 @@ Point3D sphereIntersection(Sphere sphere, Vector3D ray){
     return nullPoint();
 }
 
-
+/*http://www.cs.virginia.edu/~gfx/Courses/2003/ImageSynthesis/papers/Acceleration/Fast%20MinimumStorage%20RayTriangle%20Intersection.pdf*/
 Point3D triangleIntersection(Triangle triangle, Vector3D ray){
-    Point3D planePoint = planeIntersection(triangleNormal(triangle, nullPoint()), ray);
+    Point3D intersection;
     
-    return nullPoint();
+    /*Matrices for the calculation*/
+    double rightSideTarget[3];
+    double matrixM[3][3];
+    double columnBuffer[3];
+    
+    double determinantM;
+    double determinantMt;
+    double determinantMu;
+    double determinantMv;
+    
+    double rayDistance;
+    double uvCoordinate[2];
+    
+    /*Moller-Trumbore intersection method*/
+    /*Matrix M = [-D, V1 - V0, V2 - V0]
+      where D is the direction of the ray, V0, V1, V2 are triangle points*/
+    matrixM[0][0] = -ray.direction.x;
+    matrixM[1][0] = -ray.direction.y;
+    matrixM[2][0] = -ray.direction.z;
+    
+    matrixM[0][1] = triangle.points[1].x - triangle.points[0].x;
+    matrixM[1][1] = triangle.points[1].y - triangle.points[0].y;
+    matrixM[2][1] = triangle.points[1].z - triangle.points[0].z;
+    
+    matrixM[0][2] = triangle.points[2].x - triangle.points[0].x;
+    matrixM[1][2] = triangle.points[2].y - triangle.points[0].y;
+    matrixM[2][2] = triangle.points[2].z - triangle.points[0].z;
+    
+    /*Calculate the determinant of the created matrix*/
+    determinantM = (matrixM[0][0] * matrixM[1][1] * matrixM[2][2])
+                 + (matrixM[0][1] * matrixM[1][2] * matrixM[2][0])
+                 + (matrixM[0][2] * matrixM[1][0] * matrixM[2][1])
+                 - (matrixM[0][2] * matrixM[1][1] * matrixM[2][0])
+                 - (matrixM[0][1] * matrixM[1][0] * matrixM[2][2])
+                 - (matrixM[0][0] * matrixM[1][2] * matrixM[2][1]);
+    
+    /*Ray Origin point (O) - triangle point (V0) = Q*/
+    rightSideTarget[0] = ray.position.x - triangle.points[0].x;
+    rightSideTarget[1] = ray.position.y - triangle.points[0].y;
+    rightSideTarget[2] = ray.position.z - triangle.points[0].z;
+    
+    /*Solve the system of equations resulting from MT = Q, 
+     where T = [t, u, v], t is the distance from the ray origin to the intersection,
+     u and v are the coordinates of the intersection in the transformed basis. 
+     u + v <= 1, and u, v >= 0 for an intersection.
+        Method of solving the system: Cramer's Rule
+        http://www.purplemath.com/modules/cramers.htm*/
+    
+    /*Solve for u: calculate the determinant of M with the second column replaced by Q, then
+      divide the new determinant by the old determinant*/
+    /*First, save the column being modified so that it can be restored after*/
+
+    columnBuffer[0] = matrixM[0][1];
+    columnBuffer[1] = matrixM[1][1];
+    columnBuffer[2] = matrixM[2][1];
+    
+    matrixM[0][1] = rightSideTarget[0];
+    matrixM[1][1] = rightSideTarget[1];
+    matrixM[2][1] = rightSideTarget[2];
+    
+    determinantMu = (matrixM[0][0] * matrixM[1][1] * matrixM[2][2])
+                    + (matrixM[0][1] * matrixM[1][2] * matrixM[2][0])
+                    + (matrixM[0][2] * matrixM[1][0] * matrixM[2][1])
+                    - (matrixM[0][2] * matrixM[1][1] * matrixM[2][0])
+                    - (matrixM[0][1] * matrixM[1][0] * matrixM[2][2])
+                    - (matrixM[0][0] * matrixM[1][2] * matrixM[2][1]);
+    
+    matrixM[0][1] = columnBuffer[0];
+    matrixM[1][1] = columnBuffer[1];
+    matrixM[2][1] = columnBuffer[2];
+    
+    uvCoordinate[0] = determinantMu / determinantM;
+    
+    /*Solve for v: same process but with the third column*/
+    columnBuffer[0] = matrixM[0][2];
+    columnBuffer[1] = matrixM[1][2];
+    columnBuffer[2] = matrixM[2][2];
+    
+    matrixM[0][2] = rightSideTarget[0];
+    matrixM[1][2] = rightSideTarget[1];
+    matrixM[2][2] = rightSideTarget[2];
+    
+    determinantMv = (matrixM[0][0] * matrixM[1][1] * matrixM[2][2])
+    + (matrixM[0][1] * matrixM[1][2] * matrixM[2][0])
+    + (matrixM[0][2] * matrixM[1][0] * matrixM[2][1])
+    - (matrixM[0][2] * matrixM[1][1] * matrixM[2][0])
+    - (matrixM[0][1] * matrixM[1][0] * matrixM[2][2])
+    - (matrixM[0][0] * matrixM[1][2] * matrixM[2][1]);
+    
+    matrixM[0][2] = columnBuffer[0];
+    matrixM[1][2] = columnBuffer[1];
+    matrixM[2][2] = columnBuffer[2];
+    
+    uvCoordinate[1] = determinantMv / determinantM;
+    
+    
+    /*Determine if there is an intersection: u + v <= 1, and u, v >= 0 for any point in the triangle*/
+    if((uvCoordinate[0] + uvCoordinate[1] > 1) || (uvCoordinate[0] < 0) || (uvCoordinate[1] < 0)){
+        return(nullPoint());
+    }
+    
+    
+    /*Solve for t to get the intersection, same process as u and v but with the first column*/
+    columnBuffer[0] = matrixM[0][0];
+    columnBuffer[1] = matrixM[1][0];
+    columnBuffer[2] = matrixM[2][0];
+    
+    matrixM[0][0] = rightSideTarget[0];
+    matrixM[1][0] = rightSideTarget[1];
+    matrixM[2][0] = rightSideTarget[2];
+    
+    determinantMt = (matrixM[0][0] * matrixM[1][1] * matrixM[2][2])
+    + (matrixM[0][1] * matrixM[1][2] * matrixM[2][0])
+    + (matrixM[0][2] * matrixM[1][0] * matrixM[2][1])
+    - (matrixM[0][2] * matrixM[1][1] * matrixM[2][0])
+    - (matrixM[0][1] * matrixM[1][0] * matrixM[2][2])
+    - (matrixM[0][0] * matrixM[1][2] * matrixM[2][1]);
+    
+    matrixM[0][0] = columnBuffer[0];
+    matrixM[1][0] = columnBuffer[1];
+    matrixM[2][0] = columnBuffer[2];
+    
+    rayDistance = determinantMt / determinantM;
+    intersection.x = ray.position.x + (ray.direction.x * rayDistance);
+    intersection.y = ray.position.y + (ray.direction.y * rayDistance);
+    intersection.z = ray.position.z + (ray.direction.z * rayDistance);
+    
+    return intersection;
 }
 
 Point3D polygonIntersection(Polygon poly, Vector3D ray){

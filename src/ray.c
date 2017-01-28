@@ -4,6 +4,7 @@ extern GlobalVars globals;
 
 ColourRGB traceRay(Vector3D ray, int currentIteration){
     int i;
+    double angle;
     
     ShapeData * closestShape = NULL;
     Point3D intersection;
@@ -104,20 +105,23 @@ ColourRGB traceRay(Vector3D ray, int currentIteration){
                    * dotProduct(shapeNormal, shapeToLightVector));
                 
                 /*Specular component*/
-                specularComponent.red = specularComponent.red
-                + (globals.specularCoefficient
-                   * globals.lights[i].colour.red
-                   * pow(dotProduct(lightReflectVector, shapeToViewVector), globals.specularFiness));
+                angle = angleBetween(lightReflectVector, shapeToViewVector);
+                if(angle >= (M_PI/2)){
+                    specularComponent.red = specularComponent.red
+                    + (globals.specularCoefficient
+                       * globals.lights[i].colour.red
+                       * pow(dotProduct(lightReflectVector, shapeToViewVector), globals.specularFiness));
                 
-                specularComponent.green = specularComponent.green
-                + (globals.specularCoefficient
-                   * globals.lights[i].colour.green
-                   * pow(dotProduct(lightReflectVector, shapeToViewVector), globals.specularFiness));
+                    specularComponent.green = specularComponent.green
+                    + (globals.specularCoefficient
+                       * globals.lights[i].colour.green
+                       * pow(dotProduct(lightReflectVector, shapeToViewVector), globals.specularFiness));
                 
-                specularComponent.blue = specularComponent.blue
-                + (globals.specularCoefficient
-                   * globals.lights[i].colour.blue
-                   * pow(dotProduct(lightReflectVector, shapeToViewVector), globals.specularFiness));
+                    specularComponent.blue = specularComponent.blue
+                    + (globals.specularCoefficient
+                       * globals.lights[i].colour.blue
+                       * pow(dotProduct(lightReflectVector, shapeToViewVector), globals.specularFiness));
+                }
                 
                 /*All together*/
                 pointColour.red = pointColour.red
@@ -142,6 +146,7 @@ ColourRGB traceRay(Vector3D ray, int currentIteration){
         /*Reflection*/
         if((globals.reflections == true) && (closestShape->reflectivity > 0.01)){
             viewReflectVector = getReflection(ray, shapeNormal);
+            viewReflectVector = normalize(viewReflectVector);
             reflectColour = traceRay(viewReflectVector, currentIteration + 1);
             
             finalColour.red = finalColour.red + (reflectColour.red * closestShape->reflectivity);
@@ -176,7 +181,8 @@ ShapeData * getFirstIntersectedShape(Vector3D ray){
              from closest to farthest instead of doing this)*/
             /*IntersectionLength > 0.01 is there to ignore any intersections of rays starting from
              a shape going to the same shape.*/
-            if((currentIntersectionLength < closestIntersectionLength) || (closestIntersectionLength < -1)){
+            if(((currentIntersectionLength < closestIntersectionLength) || (closestIntersectionLength < -1)) &&
+                (currentIntersectionLength > 0.01)){
                 closestIntersectionLength = currentIntersectionLength;
                 closestShape = &globals.shapes[i];
             }
@@ -184,36 +190,4 @@ ShapeData * getFirstIntersectedShape(Vector3D ray){
     }
     
     return(closestShape);
-}
-
-
-Boolean isInRayPath(Vector3D ray, Point3D testPoint){
-    Vector3D rayToPoint;
-    double dotValue;
-    double radianAngle;
-    
-    rayToPoint.position = ray.position;
-    rayToPoint.direction.x = testPoint.x - rayToPoint.position.x;
-    rayToPoint.direction.y = testPoint.y - rayToPoint.position.y;
-    rayToPoint.direction.z = testPoint.z - rayToPoint.position.z;
-    
-    ray = normalize(ray);
-    rayToPoint = normalize(rayToPoint);
-    
-    dotValue = dotProduct(ray, rayToPoint);
-    if(dotValue > 1){
-        dotValue = 1;
-    }
-    else if(dotValue < -1){
-        dotValue = -1;
-    }
-    
-    radianAngle = acos(dotValue);
-    
-    if((radianAngle > (-M_PI / 2)) && (radianAngle < (M_PI / 2))){
-        return true;
-    }
-    else{
-        return false;
-    }
 }

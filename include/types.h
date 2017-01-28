@@ -77,7 +77,7 @@ typedef struct{
 } LightData;
 
 
-/*Global variable structure (Singleton pattern)*/
+/*Global variable structure (Similar to a Singleton pattern, to not mess up the global namespace)*/
 typedef struct{
     /*Array of shapes*/
     ShapeData * shapes;
@@ -87,7 +87,10 @@ typedef struct{
     LightData * lights;
     int numberOfLights;
     
+    /*Pixel colour arrays*/
     GLfloat * pixels;
+    GLfloat * loadBarPixels;
+    int drawingDone;
     
     /*Width and height of the viewing plane*/
     double planeWidth;

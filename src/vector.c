@@ -32,6 +32,10 @@ double getLength(Point3D start, Point3D end){
     return(sqrt(pow(end.x - start.x, 2) + pow(end.y - start.y, 2) + pow(end.z - start.z, 2)));
 }
 
+double getLengthFromOrigin(Point3D end){
+    return(sqrt(pow(end.x, 2) + pow(end.y, 2) + pow(end.z, 2)));
+}
+
 Vector3D pointToVector(Point3D point){
     Vector3D vector;
     
@@ -46,9 +50,57 @@ Vector3D pointToVector(Point3D point){
     return(vector);
 }
 
+Boolean isInRayPath(Vector3D ray, Point3D testPoint){
+    Vector3D rayToPoint;
+    double dotValue;
+    double radianAngle;
+    
+    rayToPoint.position = ray.position;
+    rayToPoint.direction.x = testPoint.x - rayToPoint.position.x;
+    rayToPoint.direction.y = testPoint.y - rayToPoint.position.y;
+    rayToPoint.direction.z = testPoint.z - rayToPoint.position.z;
+    
+    ray = normalize(ray);
+    rayToPoint = normalize(rayToPoint);
+    
+    dotValue = dotProduct(ray, rayToPoint);
+    if(dotValue > 1){
+        dotValue = 1;
+    }
+    else if(dotValue < -1){
+        dotValue = -1;
+    }
+    
+    radianAngle = acos(dotValue);
+    
+    if((radianAngle > (-M_PI / 2)) && (radianAngle < (M_PI / 2))){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+
+double angleBetween(Vector3D v1, Vector3D v2){
+    double dotValue = dotProduct(v1, v2);
+    
+    if(dotValue > 1){
+        dotValue = 1;
+    }
+    else if(dotValue < -1){
+        dotValue = -1;
+    }
+    
+    return acos(dotValue / (getLengthFromOrigin(v1.direction) * getLengthFromOrigin(v1.direction)));
+}
+
+
 Point3D nullPoint(){
-    /*Any point with a negative z can't be seen by the viewplane, and will be considered
-     as a null point.*/
+    /*An point at z < -999 is very far behind the camera, and probably won't
+      come into play, since it will likely be too far away to be seen in a
+      reflection, and can't be seen under normal circumstances. We will use
+      this as a "null" value.*/
     Point3D nullPoint;
     
     nullPoint.x = -4.0;
@@ -59,7 +111,7 @@ Point3D nullPoint(){
 }
 
 Boolean isNullPoint(Point3D point){
-    if(point.z < -1){
+    if(point.z < -998){
         return true;
     }
     else{

@@ -10,6 +10,10 @@ void initGlobals(){
     globals.numberOfLights = 0;
     
     globals.pixels = calloc(START_WIDTH * START_HEIGHT * 3, sizeof(GLfloat));
+    globals.loadBarPixels = calloc(LOADBAR_WIDTH * LOADBAR_HEIGHT * 3, sizeof(GLfloat));
+    globals.drawingDone = 0;
+    
+    initLoadingBar();
     
     globals.planeWidth = 102.4;
     globals.planeHeight = 76.8;
@@ -51,7 +55,7 @@ void initGlobals(){
     globals.specularCoefficient = 0.4;
     globals.specularFiness = 4;
     
-    globals.lightAttenuation = 0.8;
+    globals.lightAttenuation = 1.0;
     
     globals.maxTraceIterations = 8;
 }
@@ -60,7 +64,7 @@ int main(int argc, char ** argv){
     glutInit(&argc, argv);
     glutInitDisplayMode (GLUT_SINGLE | GLUT_RGBA | GLUT_DEPTH);
     glutInitWindowSize (START_WIDTH, START_HEIGHT);
-    glutCreateWindow("Ray Renderer, by Brandon Tan");
+    glutCreateWindow("Ray Renderer");
     initGlobals();
     init();
     
@@ -71,7 +75,7 @@ int main(int argc, char ** argv){
         parseFile("./inputs/defaultFile.csv");
     }
     
-    display();
+    //display();
     glutReshapeFunc(reshape);
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
