@@ -22,5 +22,5 @@ Example input files are provided under the "input" directory.
 ### Implemented scene objects
 
 sphere
-triangle (TODO: Fix normals)
+triangle
 light (point light source)
