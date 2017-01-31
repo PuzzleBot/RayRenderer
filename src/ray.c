@@ -106,7 +106,7 @@ ColourRGB traceRay(Vector3D ray, int currentIteration){
                 
                 /*Specular component*/
                 angle = angleBetween(lightReflectVector, shapeToViewVector);
-                if(angle >= (M_PI/2)){
+                if((angle >= (M_PI/2)) && (closestShape->reflectivity > 0.01)){
                     specularComponent.red = specularComponent.red
                     + (globals.specularCoefficient
                        * globals.lights[i].colour.red
@@ -144,7 +144,7 @@ ColourRGB traceRay(Vector3D ray, int currentIteration){
         finalColour.blue = pointColour.blue;
         
         /*Reflection*/
-        if((globals.reflections == true) && (closestShape->reflectivity > 0.01)){
+        if((globals.reflections == true) && (closestShape->reflectivity > 0.001)){
             viewReflectVector = getReflection(ray, shapeNormal);
             viewReflectVector = normalize(viewReflectVector);
             reflectColour = traceRay(viewReflectVector, currentIteration + 1);

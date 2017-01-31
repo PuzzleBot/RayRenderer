@@ -73,7 +73,7 @@ Boolean isInRayPath(Vector3D ray, Point3D testPoint){
     
     radianAngle = acos(dotValue);
     
-    if((radianAngle > (-M_PI / 2)) && (radianAngle < (M_PI / 2))){
+    if(radianAngle < (M_PI / 2)){
         return true;
     }
     else{

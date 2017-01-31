@@ -55,7 +55,7 @@ void initGlobals(){
     globals.specularCoefficient = 0.4;
     globals.specularFiness = 4;
     
-    globals.lightAttenuation = 1.0;
+    globals.lightAttenuation = 1.2;
     
     globals.maxTraceIterations = 8;
 }
@@ -94,5 +94,6 @@ void deallocExit(int exitCode){
     }
     
     free(globals.pixels);
+    free(globals.loadBarPixels);
     exit(exitCode);
 }

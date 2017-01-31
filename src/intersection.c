@@ -113,6 +113,14 @@ Point3D triangleIntersection(Triangle triangle, Vector3D ray){
     double rayDistance;
     double uvCoordinate[2];
     
+    double normalRayAngle = angleBetween(ray, triangle.normal);
+    
+    /*Back face check - no intersection if the ray goes through the back
+    if(normalRayAngle < (M_PI / 2)){
+        return(nullPoint());
+    }*/
+    
+    
     /*Moller-Trumbore intersection method*/
     /*Matrix M = [-D, V1 - V0, V2 - V0]
       where D is the direction of the ray, V0, V1, V2 are triangle points*/
@@ -197,12 +205,14 @@ Point3D triangleIntersection(Triangle triangle, Vector3D ray){
     
     
     /*Determine if there is an intersection: u + v <= 1, and u, v >= 0 for any point in the triangle*/
-    if((uvCoordinate[0] + uvCoordinate[1] > 1) || (uvCoordinate[0] < 0) || (uvCoordinate[1] < 0)){
+    if((uvCoordinate[0] + uvCoordinate[1] > 1.001) || (uvCoordinate[0] < -0.001) || (uvCoordinate[1] < -0.001)){
         return(nullPoint());
     }
     
     
-    /*Solve for t to get the intersection, same process as u and v but with the first column*/
+    /*Solve for t to get the intersection, same process as u and v but with the first column
+      Since t is the length from the vp to the intersection, the intersection's coordinates
+      can be found easily using the original vector*/
     columnBuffer[0] = matrixM[0][0];
     columnBuffer[1] = matrixM[1][0];
     columnBuffer[2] = matrixM[2][0];
@@ -227,7 +237,14 @@ Point3D triangleIntersection(Triangle triangle, Vector3D ray){
     intersection.y = ray.position.y + (ray.direction.y * rayDistance);
     intersection.z = ray.position.z + (ray.direction.z * rayDistance);
     
-    return intersection;
+    /*Ray direction test: If the intersection is on the side of the ray origin opposite to the ray's
+     direction, no intersection can exist*/
+    if(isInRayPath(ray, intersection) == false){
+        return nullPoint();
+    }
+    else{
+        return(intersection);
+    }
 }
 
 Point3D polygonIntersection(Polygon poly, Vector3D ray){
