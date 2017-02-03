@@ -6,6 +6,9 @@ void parseFile(char * inputFilePath){
     FILE * fp = fopen(inputFilePath, "r");
     char inputBuffer[2048];
     char * shapeToken = NULL;
+    int lineCounter = 0;
+    
+    GLfloat currentRefractIndex = 1.0;
     
     if(fp == NULL){
         printf("Error could not open the file %s", inputFilePath);
@@ -18,21 +21,28 @@ void parseFile(char * inputFilePath){
             shapeToken = strtok(inputBuffer, ", \t\n");
         
             if(strcmp(shapeToken, "triangle") == 0){
-                parseTriangle();
+                parseTriangle(currentRefractIndex);
             }
             else if(strcmp(shapeToken, "sphere") == 0){
-                parseSphere();
+                parseSphere(currentRefractIndex);
             }
             else if(strcmp(shapeToken, "light") == 0){
                 parseLight();
             }
+            else{
+                /*Lines starting with '#' are comments, and are ignored*/
+                if(shapeToken[0] != '#'){
+                    printf("Warning: Unrecognized input on line %d.\n", lineCounter);
+                }
+            }
         }
+        lineCounter++;
     }
     while((feof(fp) == 0) && (ferror(fp) == 0));
     
 }
 
-void parseTriangle(){
+void parseTriangle(GLfloat refractIndex){
     char * token;
     ShapeData parsedShape;
     
@@ -162,6 +172,16 @@ void parseTriangle(){
         return;
     }
     
+    token = strtok(NULL, ", \t\n");
+    if(token != NULL){
+        parsedShape.opacity = atof(token);
+    }
+    else{
+        printf("Parse error: Missing parameter for shape %d (triangle): Opacity.\n", globals.numberOfShapes);
+        printf("Setting opacity to default: 1.0\n");
+        parsedShape.opacity = 1.0;
+    }
+    
     parsedShape.theShape.triangle.normal.direction = nullPoint();
     parsedShape.theShape.triangle.normal = getNormal(parsedShape, parsedShape.theShape.triangle.points[0]);
     
@@ -171,7 +191,7 @@ void parseTriangle(){
     globals.numberOfShapes++;
 }
 
-void parseSphere(){
+void parseSphere(GLfloat refractIndex){
     char * token;
     ShapeData parsedShape;
     
@@ -251,6 +271,16 @@ void parseSphere(){
     else{
         printf("Parse error: Missing parameter for shape %d (sphere): Reflectivity.\n", globals.numberOfShapes);
         return;
+    }
+    
+    token = strtok(NULL, ", \t\n");
+    if(token != NULL){
+        parsedShape.opacity = atof(token);
+    }
+    else{
+        printf("Parse error: Missing parameter for shape %d (sphere): Opacity.\n", globals.numberOfShapes);
+        printf("Setting opacity to default: 1.0\n");
+        parsedShape.opacity = 1.0;
     }
     
     globals.shapes = realloc(globals.shapes, sizeof(ShapeData) * (globals.numberOfShapes + 1));

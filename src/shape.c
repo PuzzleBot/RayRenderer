@@ -91,16 +91,49 @@ Vector3D polygonNormal(Polygon poly, Point3D pointOnShape){
     return nullVector;
 }
 
-Vector3D getReflection(Vector3D lightToIntersection, Vector3D normal){
+
+Vector3D getReflection(Vector3D lightToIntersection, Vector3D normal, Point3D intersection){
     Vector3D reflectedRay;
     double dotValue = -(dotProduct(normal, lightToIntersection));
-    //printf("Dot: %.2f\n", dotValue);
     
-    reflectedRay.position = normal.position;
+    reflectedRay.position = intersection;
     
     reflectedRay.direction.x = lightToIntersection.direction.x + (2 * normal.direction.x * dotValue);
     reflectedRay.direction.y = lightToIntersection.direction.y + (2 * normal.direction.y * dotValue);
     reflectedRay.direction.z = lightToIntersection.direction.z + (2 * normal.direction.z * dotValue);
     
     return(reflectedRay);
+}
+
+
+/*https://www.cs.unc.edu/~rademach/xroads-RT/RTarticle.html*/
+/*Computes a refracted vector using the equation:
+  Rr = (n * V) + (n * c1 - c2) * N
+  where Rr is the refracted vector, n is the ratio of the old and new refraction indices,
+  V is the ray vector's direction, N is the normal vector's direction, c1
+  is the negative dot product of the ray and normal, and c2 is a variable
+  which is used to compute the angle between the normal and the new vector.*/
+Vector3D getRefraction(Vector3D rayToIntersection, Vector3D normal, double oldRefractIndex, double newRefractIndex, Point3D intersection){
+    double refractionRatio = oldRefractIndex / newRefractIndex;      // n
+    double vectorNormalDot = -dotProduct(rayToIntersection, normal); // c1
+    double angleModifier = sqrt( 1 - ((refractionRatio * refractionRatio) * (1 - (vectorNormalDot * vectorNormalDot))) ); // c2
+    
+    Vector3D refractedRay;
+    
+    refractedRay.position = intersection;
+    
+    refractedRay.direction.x = (refractionRatio * rayToIntersection.direction.x)
+                                + ((refractionRatio * vectorNormalDot - angleModifier)
+                                   * normal.direction.x);
+    
+    refractedRay.direction.y = (refractionRatio * rayToIntersection.direction.y)
+                                + ((refractionRatio * vectorNormalDot - angleModifier)
+                                   * normal.direction.y);
+    
+    refractedRay.direction.z = (refractionRatio * rayToIntersection.direction.z)
+                                + ((refractionRatio * vectorNormalDot - angleModifier)
+                                   * normal.direction.z);
+    
+    
+    return(refractedRay);
 }

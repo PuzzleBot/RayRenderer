@@ -113,13 +113,6 @@ Point3D triangleIntersection(Triangle triangle, Vector3D ray){
     double rayDistance;
     double uvCoordinate[2];
     
-    double normalRayAngle = angleBetween(ray, triangle.normal);
-    
-    /*Back face check - no intersection if the ray goes through the back
-    if(normalRayAngle < (M_PI / 2)){
-        return(nullPoint());
-    }*/
-    
     
     /*Moller-Trumbore intersection method*/
     /*Matrix M = [-D, V1 - V0, V2 - V0]

@@ -16,8 +16,8 @@
 
 /*Parsing and allocation functions*/
 void parseFile(char * inputFilePath);
-void parseTriangle();
-void parseSphere();
+void parseTriangle(GLfloat refractIndex);
+void parseSphere(GLfloat refractIndex);
 void parseLight();
 
 void deallocExit(int exitCode);
@@ -42,7 +42,8 @@ Vector3D triangleNormal(Triangle triangle, Point3D pointOnShape);
 Vector3D polygonNormal(Polygon poly, Point3D pointOnShape);
 Point3D planeIntersection(Vector3D planeNormal, Vector3D ray);
 
-Vector3D getReflection(Vector3D lightToIntersection, Vector3D normal);
+Vector3D getReflection(Vector3D lightToIntersection, Vector3D normal, Point3D intersection);
+Vector3D getRefraction(Vector3D rayToIntersection, Vector3D normal, double oldRefractIndex, double newRefractIndex, Point3D intersection);
 
 /*Vector and point functions*/
 Vector3D crossProduct(Vector3D v1, Vector3D v2);

@@ -27,6 +27,7 @@ ColourRGB traceRay(Vector3D ray, int currentIteration){
     Vector3D viewReflectVector;
     
     ColourRGB refractColour;
+    Vector3D viewRefractVector;
     
     
     if(currentIteration >= globals.maxTraceIterations){
@@ -85,7 +86,7 @@ ColourRGB traceRay(Vector3D ray, int currentIteration){
             blockingShape = getFirstIntersectedShape(shapeToLightVector);
             if(blockingShape == NULL){
                 
-                lightReflectVector = getReflection(shapeToLightVector, shapeNormal);
+                lightReflectVector = getReflection(shapeToLightVector, shapeNormal, intersection);
                 lightReflectVector = normalize(lightReflectVector);
                 
                 /*Diffuse component*/
@@ -145,7 +146,7 @@ ColourRGB traceRay(Vector3D ray, int currentIteration){
         
         /*Reflection*/
         if((globals.reflections == true) && (closestShape->reflectivity > 0.001)){
-            viewReflectVector = getReflection(ray, shapeNormal);
+            viewReflectVector = getReflection(ray, shapeNormal, intersection);
             viewReflectVector = normalize(viewReflectVector);
             reflectColour = traceRay(viewReflectVector, currentIteration + 1);
             
@@ -153,6 +154,12 @@ ColourRGB traceRay(Vector3D ray, int currentIteration){
             finalColour.green = finalColour.green + (reflectColour.green * closestShape->reflectivity);
             finalColour.blue = finalColour.blue + (reflectColour.blue  * closestShape->reflectivity);
         }
+        
+        /*Transparency / Refraction*/
+        if((globals.transparency == true) && (closestShape->opacity < 0.999)){
+            
+        }
+        
     }
     
     return(finalColour);

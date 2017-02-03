@@ -68,6 +68,8 @@ typedef struct{
     ShapeType type;
     ColourRGB colour;
     GLfloat reflectivity;
+    GLfloat opacity;
+    GLfloat refractionIndex;
 } ShapeData;
 
 

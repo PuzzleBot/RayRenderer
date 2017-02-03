@@ -33,7 +33,7 @@ void incrementLoadingBar(){
     if(colouredSegments < totalSegments){
         for(i = 11; i < 40; i++){
             for(j = leftX; j < rightX; j++){
-                insertPixel(globals.loadBarPixels, LOADBAR_WIDTH, LOADBAR_HEIGHT, j, i, 0.2, 0.2, 0.7);
+                insertPixel(globals.loadBarPixels, LOADBAR_WIDTH, LOADBAR_HEIGHT, j, i, 0.2, 0.2, 1.0);
             }
         }
         
