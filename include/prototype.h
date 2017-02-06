@@ -19,6 +19,7 @@ void parseFile(char * inputFilePath);
 void parseTriangle(GLfloat refractIndex);
 void parseSphere(GLfloat refractIndex);
 void parseLight();
+GLfloat parseRefractionSetting();
 
 void deallocExit(int exitCode);
 
@@ -60,7 +61,7 @@ Point3D nullPoint();
 Boolean isNullPoint(Point3D point);
 
 /*Ray tracing-specific functions*/
-ColourRGB traceRay(Vector3D ray, int currentIteration);
+ColourRGB traceRay(Vector3D ray, int currentIteration, double currentRefractIndex);
 ShapeData * getFirstIntersectedShape(Vector3D ray);
 
 /*Pixel drawing functions*/

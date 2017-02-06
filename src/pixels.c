@@ -39,7 +39,7 @@ void drawPixels(){
             currentRay.direction.z = currentPlanePosition.z - globals.viewPoint.z;
             currentRay = normalize(currentRay);
             
-            pixelColour = traceRay(currentRay, 0);
+            pixelColour = traceRay(currentRay, 0, AIR_REFRACTION_INDEX);
             insertPixel(globals.pixels, START_WIDTH, START_HEIGHT, j, i, pixelColour.red, pixelColour.green, pixelColour.blue);
             
             /*Update the loading bar accordingly, based on the number of pixels

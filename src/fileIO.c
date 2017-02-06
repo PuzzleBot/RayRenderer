@@ -18,7 +18,7 @@ void parseFile(char * inputFilePath){
     do{
         fgets(inputBuffer, 2048, fp);
         if(strlen(inputBuffer) > 1){
-            shapeToken = strtok(inputBuffer, ", \t\n");
+            shapeToken = strtok(inputBuffer, ",; \t\n");
         
             if(strcmp(shapeToken, "triangle") == 0){
                 parseTriangle(currentRefractIndex);
@@ -32,7 +32,7 @@ void parseFile(char * inputFilePath){
             else{
                 /*Lines starting with '#' are comments, and are ignored*/
                 if(shapeToken[0] != '#'){
-                    printf("Warning: Unrecognized input on line %d.\n", lineCounter);
+                    printf("Warning: Ignoring unrecognized input on line %d.\n", lineCounter);
                 }
             }
         }
@@ -49,7 +49,7 @@ void parseTriangle(GLfloat refractIndex){
     parsedShape.type = TRIANGLE;
     
     /*Coordinates of vertex 1*/
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.theShape.triangle.points[0].x = atof(token);
     }
@@ -58,7 +58,7 @@ void parseTriangle(GLfloat refractIndex){
         return;
     }
     
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.theShape.triangle.points[0].y = atof(token);
     }
@@ -67,7 +67,7 @@ void parseTriangle(GLfloat refractIndex){
         return;
     }
     
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.theShape.triangle.points[0].z = atof(token);
     }
@@ -78,7 +78,7 @@ void parseTriangle(GLfloat refractIndex){
     
     
     /*Coordinates of vertex 2*/
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.theShape.triangle.points[1].x = atof(token);
     }
@@ -87,7 +87,7 @@ void parseTriangle(GLfloat refractIndex){
         return;
     }
     
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.theShape.triangle.points[1].y = atof(token);
     }
@@ -96,7 +96,7 @@ void parseTriangle(GLfloat refractIndex){
         return;
     }
     
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.theShape.triangle.points[1].z = atof(token);
     }
@@ -107,7 +107,7 @@ void parseTriangle(GLfloat refractIndex){
     
     
     /*Coordinates of vertex 3*/
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.theShape.triangle.points[2].x = atof(token);
     }
@@ -116,7 +116,7 @@ void parseTriangle(GLfloat refractIndex){
         return;
     }
     
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.theShape.triangle.points[2].y = atof(token);
     }
@@ -125,7 +125,7 @@ void parseTriangle(GLfloat refractIndex){
         return;
     }
     
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.theShape.triangle.points[2].z = atof(token);
     }
@@ -136,7 +136,7 @@ void parseTriangle(GLfloat refractIndex){
     
     
     /*Colour*/
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.colour.red = (GLfloat)atof(token);
     }
@@ -145,7 +145,7 @@ void parseTriangle(GLfloat refractIndex){
         return;
     }
     
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.colour.green = (GLfloat)atof(token);
     }
@@ -154,7 +154,7 @@ void parseTriangle(GLfloat refractIndex){
         return;
     }
     
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.colour.blue = (GLfloat)atof(token);
     }
@@ -163,7 +163,7 @@ void parseTriangle(GLfloat refractIndex){
         return;
     }
     
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.reflectivity = atof(token);
     }
@@ -172,14 +172,25 @@ void parseTriangle(GLfloat refractIndex){
         return;
     }
     
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.opacity = atof(token);
+        
+        token = strtok(NULL, ",; \t\n");
+        if(token != NULL){
+            parsedShape.refractionIndex = atof(token);
+        }
+        else{
+            printf("Warning: Missing parameter for shape %d (triangle): Index of Refraction.\n", globals.numberOfShapes);
+            printf("Setting to default: Air refraction index\n");
+            parsedShape.refractionIndex = AIR_REFRACTION_INDEX;
+        }
     }
     else{
         printf("Parse error: Missing parameter for shape %d (triangle): Opacity.\n", globals.numberOfShapes);
         printf("Setting opacity to default: 1.0\n");
         parsedShape.opacity = 1.0;
+        parsedShape.refractionIndex = AIR_REFRACTION_INDEX;
     }
     
     parsedShape.theShape.triangle.normal.direction = nullPoint();
@@ -198,7 +209,7 @@ void parseSphere(GLfloat refractIndex){
     parsedShape.type = SPHERE;
     
     /*Center coordinates*/
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.theShape.sphere.position.x = atof(token);
     }
@@ -207,7 +218,7 @@ void parseSphere(GLfloat refractIndex){
         return;
     }
     
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.theShape.sphere.position.y = atof(token);
     }
@@ -216,7 +227,7 @@ void parseSphere(GLfloat refractIndex){
         return;
     }
     
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.theShape.sphere.position.z = atof(token);
     }
@@ -226,7 +237,7 @@ void parseSphere(GLfloat refractIndex){
     }
     
     /*Sphere radius*/
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.theShape.sphere.radius = atof(token);
     }
@@ -237,7 +248,7 @@ void parseSphere(GLfloat refractIndex){
     
     
     /*Colour*/
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.colour.red = (GLfloat)atof(token);
     }
@@ -246,7 +257,7 @@ void parseSphere(GLfloat refractIndex){
         return;
     }
     
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.colour.green = (GLfloat)atof(token);
     }
@@ -255,7 +266,7 @@ void parseSphere(GLfloat refractIndex){
         return;
     }
     
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.colour.blue = (GLfloat)atof(token);
     }
@@ -264,7 +275,7 @@ void parseSphere(GLfloat refractIndex){
         return;
     }
     
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.reflectivity = atof(token);
     }
@@ -273,14 +284,26 @@ void parseSphere(GLfloat refractIndex){
         return;
     }
     
-    token = strtok(NULL, ", \t\n");
+    /*Opacity and index of refraction*/
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedShape.opacity = atof(token);
+        
+        token = strtok(NULL, ",; \t\n");
+        if(token != NULL){
+            parsedShape.refractionIndex = atof(token);
+        }
+        else{
+            printf("Warning: Missing parameter for shape %d (sphere): Index of Refraction.\n", globals.numberOfShapes);
+            printf("Setting to default: Air refraction index\n");
+            parsedShape.refractionIndex = AIR_REFRACTION_INDEX;
+        }
     }
     else{
         printf("Parse error: Missing parameter for shape %d (sphere): Opacity.\n", globals.numberOfShapes);
         printf("Setting opacity to default: 1.0\n");
         parsedShape.opacity = 1.0;
+        parsedShape.refractionIndex = AIR_REFRACTION_INDEX;
     }
     
     globals.shapes = realloc(globals.shapes, sizeof(ShapeData) * (globals.numberOfShapes + 1));
@@ -295,7 +318,7 @@ void parseLight(){
     LightData parsedLight;
     
     /*Center coordinates*/
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedLight.position.x = atof(token);
     }
@@ -304,7 +327,7 @@ void parseLight(){
         return;
     }
     
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedLight.position.y = atof(token);
     }
@@ -313,7 +336,7 @@ void parseLight(){
         return;
     }
     
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedLight.position.z = atof(token);
     }
@@ -323,7 +346,7 @@ void parseLight(){
     }
     
     /*Colour*/
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedLight.colour.red = (GLfloat)atof(token);
     }
@@ -332,7 +355,7 @@ void parseLight(){
         return;
     }
     
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedLight.colour.green = (GLfloat)atof(token);
     }
@@ -341,7 +364,7 @@ void parseLight(){
         return;
     }
     
-    token = strtok(NULL, ", \t\n");
+    token = strtok(NULL, ",; \t\n");
     if(token != NULL){
         parsedLight.colour.blue = (GLfloat)atof(token);
     }
@@ -356,3 +379,15 @@ void parseLight(){
     globals.numberOfLights++;
 }
 
+
+GLfloat parseRefractionSetting(){
+    char * token = strtok(NULL, ",; \t\n");
+    
+    if(token != NULL){
+        return((GLfloat)atof(token));
+    }
+    else{
+        printf("Parse error: Unrecognized index of refraction value.\n");
+        return(1.0);
+    }
+}

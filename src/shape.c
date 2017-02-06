@@ -18,7 +18,9 @@ void printShape(ShapeData shape){
         printf("\tRadius: %.2f\n", shape.theShape.sphere.radius);
     }
     
-    printf("\tColour: %.2f, %.2f, %.2f\n", shape.colour.red, shape.colour.green, shape.colour.blue);
+    printf("\t\tColour: %.2f, %.2f, %.2f\n", shape.colour.red, shape.colour.green, shape.colour.blue);
+    printf("\t\tReflectivity: %.2f\n", shape.reflectivity);
+    printf("\t\tOpacity: %.2f, with refractive index %.2f\n", shape.opacity, shape.refractionIndex);
     printf("\n");
 }
 
@@ -122,17 +124,22 @@ Vector3D getRefraction(Vector3D rayToIntersection, Vector3D normal, double oldRe
     
     refractedRay.position = intersection;
     
-    refractedRay.direction.x = (refractionRatio * rayToIntersection.direction.x)
+    if(globals.refractions == true){
+        refractedRay.direction.x = (refractionRatio * rayToIntersection.direction.x)
                                 + ((refractionRatio * vectorNormalDot - angleModifier)
                                    * normal.direction.x);
     
-    refractedRay.direction.y = (refractionRatio * rayToIntersection.direction.y)
+        refractedRay.direction.y = (refractionRatio * rayToIntersection.direction.y)
                                 + ((refractionRatio * vectorNormalDot - angleModifier)
                                    * normal.direction.y);
     
-    refractedRay.direction.z = (refractionRatio * rayToIntersection.direction.z)
+        refractedRay.direction.z = (refractionRatio * rayToIntersection.direction.z)
                                 + ((refractionRatio * vectorNormalDot - angleModifier)
                                    * normal.direction.z);
+    }
+    else{
+        refractedRay.direction = rayToIntersection.direction;
+    }
     
     
     return(refractedRay);

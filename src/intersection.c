@@ -68,29 +68,27 @@ Point3D sphereIntersection(Sphere sphere, Vector3D ray){
             else{
                 /*Ray direction test: If the intersection is on the side of the ray origin opposite to the ray's
                  direction, no intersection can exist*/
-                if(isInRayPath(ray, intersection1) == false){
-                    return nullPoint();
-                }
-                else{
+                if(isInRayPath(ray, intersection1) == true){
                     return(intersection1);
                 }
             }
         }
+        
+        
+        if(inter2Length < 0.001){
+            return nullPoint();
+        }
         else{
-            if(inter2Length < 0.001){
+            /*Ray direction test: If the intersection is on the side of the ray origin opposite to the ray's
+             direction, no intersection can exist*/
+            if(isInRayPath(ray, intersection2) == false){
                 return nullPoint();
             }
             else{
-                /*Ray direction test: If the intersection is on the side of the ray origin opposite to the ray's
-                 direction, no intersection can exist*/
-                if(isInRayPath(ray, intersection2) == false){
-                    return nullPoint();
-                }
-                else{
-                    return(intersection2);
-                }
+                return(intersection2);
             }
         }
+        
     }
     
     return nullPoint();

@@ -43,8 +43,8 @@ void initGlobals(){
     globals.viewPlane[1][1].z = 0;
     
     globals.reflections = true;
-    globals.refractions = false;
-    globals.transparency = false;
+    globals.refractions = true;
+    globals.transparency = true;
     
     globals.ambientCoefficient = 0.2;
     globals.ambientColour.red = 1.0;

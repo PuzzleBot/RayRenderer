@@ -2,7 +2,7 @@
 
 extern GlobalVars globals;
 
-ColourRGB traceRay(Vector3D ray, int currentIteration){
+ColourRGB traceRay(Vector3D ray, int currentIteration, double currentRefractIndex){
     int i;
     double angle;
     
@@ -28,6 +28,7 @@ ColourRGB traceRay(Vector3D ray, int currentIteration){
     
     ColourRGB refractColour;
     Vector3D viewRefractVector;
+    double newRefractionIndex;
     
     
     if(currentIteration >= globals.maxTraceIterations){
@@ -148,7 +149,7 @@ ColourRGB traceRay(Vector3D ray, int currentIteration){
         if((globals.reflections == true) && (closestShape->reflectivity > 0.001)){
             viewReflectVector = getReflection(ray, shapeNormal, intersection);
             viewReflectVector = normalize(viewReflectVector);
-            reflectColour = traceRay(viewReflectVector, currentIteration + 1);
+            reflectColour = traceRay(viewReflectVector, currentIteration + 1, currentRefractIndex);
             
             finalColour.red = finalColour.red + (reflectColour.red * closestShape->reflectivity);
             finalColour.green = finalColour.green + (reflectColour.green * closestShape->reflectivity);
@@ -157,7 +158,24 @@ ColourRGB traceRay(Vector3D ray, int currentIteration){
         
         /*Transparency / Refraction*/
         if((globals.transparency == true) && (closestShape->opacity < 0.999)){
+            /*If a ray passes through an object with a refraction index equal to
+              the current refraction index the ray is passing through, that object
+              acts as an exit point into air instead (ie. the new refraction index is
+              now air's index)*/
+            if(fabs(currentRefractIndex - closestShape->refractionIndex) < 0.001){
+                newRefractionIndex = AIR_REFRACTION_INDEX;
+            }
+            else{
+                newRefractionIndex = closestShape->refractionIndex;
+            }
             
+            viewRefractVector = getRefraction(ray, shapeNormal, currentRefractIndex, newRefractionIndex, intersection);
+            viewRefractVector = normalize(viewRefractVector);
+            refractColour = traceRay(viewRefractVector, currentIteration + 1, newRefractionIndex);
+            
+            finalColour.red = finalColour.red + (refractColour.red * (1.0 - closestShape->opacity));
+            finalColour.green = finalColour.green + (refractColour.green * (1.0 - closestShape->opacity));
+            finalColour.blue = finalColour.blue + (refractColour.blue * (1.0 - closestShape->opacity));
         }
         
     }
