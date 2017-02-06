@@ -19,8 +19,16 @@ at the origin and facing the positive z-direction.
 
 Example input files are provided under the "input" directory.
 
+
 ### Implemented scene objects
 
 sphere
 triangle
 light (point light source)
+
+
+### Implemented lighting effects
+
+Ambient, Diffuse and Specular Lighting
+Reflectivity
+Transparency (untested)
