@@ -1,5 +1,6 @@
 #include "raytrace.h"
 
+/*Standard cross product function. Follows the right-hand rule.*/
 Vector3D crossProduct(Vector3D v1, Vector3D v2){
     Vector3D newVector;
     
@@ -12,12 +13,15 @@ Vector3D crossProduct(Vector3D v1, Vector3D v2){
     return newVector;
 }
 
+/*Standard dot product function. Perform Arccos on the return value for the angle
+  between the two vectors.*/
 double dotProduct(Vector3D v1, Vector3D v2){
     return( ((v1.direction.x) * (v2.direction.x)) +
             ((v1.direction.y) * (v2.direction.y)) +
             ((v1.direction.z) * (v2.direction.z)) );
 }
 
+/*Returns a version of the input vector that has a length 1 direction.*/
 Vector3D normalize(Vector3D v){
     double length = (sqrt(pow(v.direction.x, 2) + pow(v.direction.y, 2) + pow(v.direction.z, 2)));
     
@@ -28,14 +32,17 @@ Vector3D normalize(Vector3D v){
     return v;
 }
 
+/*Returns the distance between two points.*/
 double getLength(Point3D start, Point3D end){
     return(sqrt(pow(end.x - start.x, 2) + pow(end.y - start.y, 2) + pow(end.z - start.z, 2)));
 }
 
+/*Returns the distance between the input point and the origin.*/
 double getLengthFromOrigin(Point3D end){
     return(sqrt(pow(end.x, 2) + pow(end.y, 2) + pow(end.z, 2)));
 }
 
+/**/
 Vector3D pointToVector(Point3D point){
     Vector3D vector;
     
@@ -50,6 +57,8 @@ Vector3D pointToVector(Point3D point){
     return(vector);
 }
 
+/*Returns true if the point is on the vector and in the direction of the vector.
+  Returns false otherwise.*/
 Boolean isInRayPath(Vector3D ray, Point3D testPoint){
     Vector3D rayToPoint;
     double dotValue;
@@ -81,7 +90,7 @@ Boolean isInRayPath(Vector3D ray, Point3D testPoint){
     }
 }
 
-
+/*Returns the angle between two vectors.*/
 double angleBetween(Vector3D v1, Vector3D v2){
     double dotValue = dotProduct(v1, v2);
     
@@ -95,7 +104,7 @@ double angleBetween(Vector3D v1, Vector3D v2){
     return acos(dotValue / (getLengthFromOrigin(v1.direction) * getLengthFromOrigin(v1.direction)));
 }
 
-
+/*Returns a point that is considered NULL by the program.*/
 Point3D nullPoint(){
     /*An point at z < -999 is very far behind the camera, and probably won't
       come into play, since it will likely be too far away to be seen in a
@@ -110,6 +119,7 @@ Point3D nullPoint(){
     return(nullPoint);
 }
 
+/*Tests whether the point given is considered a NULL by the program.*/
 Boolean isNullPoint(Point3D point){
     if(point.z < -998){
         return true;

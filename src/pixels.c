@@ -66,3 +66,43 @@ void insertPixel(GLfloat * pixelArray, int width, int height, int x, int y, GLfl
     pixelArray[(y * width * 3) + (x * 3) + 1] = g;
     pixelArray[(y * width * 3) + (x * 3) + 2] = b;
 }
+
+
+/*Inserts a pixel colour with alpha value into an array that will be used for
+  glDrawPixels(). Unlike the above function, this one also takes in an alpha
+  value (transparency), and expects that the array has enough space for an alpha value.*/
+void insertOverlayPixel(GLfloat * pixelArray, int width, int height, int x, int y, GLfloat r, GLfloat g, GLfloat b, GLfloat a){
+    /*Treating a 1D array like a 2D one*/
+    pixelArray[(y * width * 4) + (x * 4)] = r;
+    pixelArray[(y * width * 4) + (x * 4) + 1] = g;
+    pixelArray[(y * width * 4) + (x * 4) + 2] = b;
+    pixelArray[(y * width * 4) + (x * 4) + 3] = a;
+}
+
+
+void getIntersectedScreenPixel(Vector3D v, int * pixelXstorage, int * pixelYstorage){
+    double zScale = globals.viewPlane[0][0].z - v.position.z;
+    Point3D intersection;
+    
+    double verticalMoveAmount = globals.planeHeight / START_HEIGHT;
+    double horizontalMoveAmount = globals.planeWidth / START_WIDTH;
+    
+    /*Scale the direction so that z equals 1*/
+    v.direction.x = v.direction.x / v.direction.z;
+    v.direction.y = v.direction.y / v.direction.z;
+    v.direction.z = 1.0;
+    
+    /*Use this new direction to find the screen intersection by "closing the z gap"
+      between the viewpoint and screen*/
+    intersection.x = v.position.x + (v.direction.x * zScale);
+    intersection.y = v.position.y + (v.direction.y * zScale);
+    intersection.z = globals.viewPlane[0][0].z;
+    
+    
+}
+
+void addOverlayEffects(){
+    
+}
+
+
