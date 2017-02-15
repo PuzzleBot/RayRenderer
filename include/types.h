@@ -91,6 +91,7 @@ typedef struct{
     
     /*Pixel colour arrays*/
     GLfloat * pixels;
+    GLfloat * overlayPixels;
     GLfloat * loadBarPixels;
     int drawingDone;
     

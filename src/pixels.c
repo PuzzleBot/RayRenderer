@@ -102,6 +102,7 @@ void getIntersectedScreenPixel(Vector3D v, int * pixelXstorage, int * pixelYstor
 }
 
 void addOverlayEffects(){
+    /*Put a few white pixels over the light*/
     
 }
 

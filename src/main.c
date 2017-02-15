@@ -10,8 +10,17 @@ void initGlobals(){
     globals.numberOfLights = 0;
     
     globals.pixels = calloc(START_WIDTH * START_HEIGHT * 3, sizeof(GLfloat));
+    globals.overlayPixels = calloc(START_WIDTH * START_HEIGHT * 4, sizeof(GLfloat));
     globals.loadBarPixels = calloc(LOADBAR_WIDTH * LOADBAR_HEIGHT * 3, sizeof(GLfloat));
     globals.drawingDone = 0;
+    
+    /*Enough memory?*/
+    if((globals.pixels == NULL) || (globals.overlayPixels == NULL) || (globals.loadBarPixels == NULL)){
+        printf("Not enough memory.\n");
+        exit(0);
+    }
+    
+    
     
     initLoadingBar();
     
