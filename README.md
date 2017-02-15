@@ -20,6 +20,15 @@ at the origin and facing the positive z-direction.
 Example input files are provided under the "input" directory.
 
 
+## Controls
+
+Press q to quit.
+
+Press 1 to draw all objects, with lens flares (not implemented yet).
+
+Press 2 to draw only the lens flares (not implemented yet).
+
+
 ### Implemented scene objects
 
 sphere

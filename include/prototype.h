@@ -69,6 +69,7 @@ void drawPixels();
 void insertPixel(GLfloat * pixelArray, int width, int height, int x, int y, GLfloat r, GLfloat g, GLfloat b);
 void insertOverlayPixel(GLfloat * pixelArray, int width, int height, int x, int y, GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 void getIntersectedScreenPixel(Vector3D v, int * pixelXstorage, int * pixelYstorage);
+void addOverlayEffects();
 
 /*Interface drawing functions*/
 void initLoadingBar();

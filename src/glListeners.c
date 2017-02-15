@@ -35,5 +35,13 @@ void keyboard(unsigned char key, int x, int y){
         case 'q':
             exit(0);
             break;
+        case '1':
+            glDrawPixels(START_WIDTH, START_HEIGHT, GL_RGB, GL_FLOAT, globals.pixels);
+            glFlush();
+            break;
+        case '2':
+            glDrawPixels(START_WIDTH, START_HEIGHT, GL_RGBA, GL_FLOAT, globals.overlayPixels);
+            glFlush();
+            break;
     }
 }

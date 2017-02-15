@@ -53,8 +53,11 @@ void drawPixels(){
     }
     //free(globals.loadBarPixels);
     
+    addOverlayEffects();
+    
     glWindowPos2i(0, 0);
     glDrawPixels(START_WIDTH, START_HEIGHT, GL_RGB, GL_FLOAT, globals.pixels);
+    glDrawPixels(START_WIDTH, START_HEIGHT, GL_RGBA, GL_FLOAT, globals.overlayPixels);
 }
 
 /*Inserts a pixel colour into an array that will be used for glDrawPixels().
@@ -102,6 +105,15 @@ void getIntersectedScreenPixel(Vector3D v, int * pixelXstorage, int * pixelYstor
 }
 
 void addOverlayEffects(){
+    int i;
+    int j;
+    
+    for(i = 0; i < START_HEIGHT; i++){
+        for(j = 0; j < START_WIDTH; j++){
+            insertOverlayPixel(globals.overlayPixels, START_WIDTH, START_HEIGHT, j, i, 0.0, 0.0, 0.0, 1.0);
+        }
+    }
+    
     /*Put a few white pixels over the light*/
     
 }
