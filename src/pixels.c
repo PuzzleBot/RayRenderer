@@ -101,20 +101,46 @@ void getIntersectedScreenPixel(Vector3D v, int * pixelXstorage, int * pixelYstor
     intersection.y = v.position.y + (v.direction.y * zScale);
     intersection.z = globals.viewPlane[0][0].z;
     
-    
+    *pixelXstorage = (int)((intersection.x + (globals.planeWidth / 2)) * (START_WIDTH / globals.planeWidth));
+    *pixelYstorage = (int)((intersection.y + (globals.planeHeight / 2)) * (START_WIDTH / globals.planeWidth));
 }
 
 void addOverlayEffects(){
     int i;
     int j;
+    int k;
     
-    for(i = 0; i < START_HEIGHT; i++){
-        for(j = 0; j < START_WIDTH; j++){
-            insertOverlayPixel(globals.overlayPixels, START_WIDTH, START_HEIGHT, j, i, 0.0, 0.0, 0.0, 1.0);
-        }
-    }
+    int pixelX;
+    int pixelY;
+    
+    Vector3D vpToLightRay;
+    
+    
+    vpToLightRay.position.x = globals.viewPoint.x;
+    vpToLightRay.position.y = globals.viewPoint.y;
+    vpToLightRay.position.z = globals.viewPoint.z;
     
     /*Put a few white pixels over the light*/
+    for(i = 0; i < globals.numberOfLights; i++){
+        vpToLightRay.direction.x = globals.lights[i].position.x - globals.viewPoint.x;
+        vpToLightRay.direction.y = globals.lights[i].position.y - globals.viewPoint.y;
+        vpToLightRay.direction.z = globals.lights[i].position.z - globals.viewPoint.z;
+        vpToLightRay = normalize(vpToLightRay);
+        
+        getIntersectedScreenPixel(vpToLightRay, &pixelX, &pixelY);
+        
+        for(j = 0; j < 3; j++){
+            for(k = 0; k < 3; k++){
+                insertOverlayPixel(globals.overlayPixels, START_WIDTH, START_HEIGHT, pixelX+k, pixelY+j, globals.lights[i].colour.red, globals.lights[i].colour.green, globals.lights[i].colour.blue, 0.0);
+                
+                insertOverlayPixel(globals.overlayPixels, START_WIDTH, START_HEIGHT, pixelX-k, pixelY-j, globals.lights[i].colour.red, globals.lights[i].colour.green, globals.lights[i].colour.blue, 0.0);
+                
+                insertOverlayPixel(globals.overlayPixels, START_WIDTH, START_HEIGHT, pixelX-k, pixelY+j, globals.lights[i].colour.red, globals.lights[i].colour.green, globals.lights[i].colour.blue, 0.0);
+                
+                insertOverlayPixel(globals.overlayPixels, START_WIDTH, START_HEIGHT, pixelX+k, pixelY-j, globals.lights[i].colour.red, globals.lights[i].colour.green, globals.lights[i].colour.blue, 0.0);
+            }
+        }
+    }
     
 }
 

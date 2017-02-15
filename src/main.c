@@ -103,5 +103,6 @@ void deallocExit(int exitCode){
     
     free(globals.pixels);
     free(globals.loadBarPixels);
+    free(globals.overlayPixels);
     exit(exitCode);
 }
