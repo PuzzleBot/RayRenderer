@@ -1,6 +1,14 @@
 # RayRenderer
 A simple program which uses ray tracing to display a scene of simple shapes specified by the user.
 
+
+## System Requirements
+
+Mac OS X - clang and OpenGL installed
+
+Linux - clang and OpenGL installed
+(Note that this program was developed for OS X, so it might not work for Linux, though the proper linux header files are included when the program detects it is running on Linux.)
+
 ## Compilation
 Navigate to the directory this README is located in using the terminal, then type "make" to compile the project as "raytracer.o" inside the bin directory.
 
