@@ -1,3 +1,4 @@
 triangle, vertex1x, vertex1y, vertex1z, vertex2x, vertex2y, vertex2z, vertex3x, vertex3y, vertex3z, red, green, blue, reflectivity, opacity, index of refraction
 sphere, x, y, z, radius, red, green, blue, reflectivity, opacity, index of refraction
 light, x, y, z, red, green, blue
+lens, z offset, radius, concave/convex, index of refraction

@@ -79,6 +79,15 @@ typedef struct{
 } LightData;
 
 
+/*Lenses are basically half-spheres that are transparent*/
+typedef struct{
+    Point3D position;
+    double radius;
+    Boolean isConvex;
+    GLfloat refractionIndex;
+} LensData;
+
+
 /*Global variable structure (Similar to a Singleton pattern, to not mess up the global namespace)*/
 typedef struct{
     /*Array of shapes*/
@@ -88,6 +97,10 @@ typedef struct{
     /*Array of point light sources*/
     LightData * lights;
     int numberOfLights;
+    
+    /*Array of camera lenses to simulate*/
+    LensData * lenses;
+    int numberOfLenses;
     
     /*Pixel colour arrays*/
     GLfloat * pixels;
@@ -109,6 +122,7 @@ typedef struct{
     Boolean reflections;
     Boolean refractions;
     Boolean transparency;
+    Boolean lensFlares;
     
     /*Coefficients for the illumination model*/
     double ambientCoefficient;

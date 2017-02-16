@@ -57,7 +57,6 @@ void drawPixels(){
     
     glWindowPos2i(0, 0);
     glDrawPixels(START_WIDTH, START_HEIGHT, GL_RGB, GL_FLOAT, globals.pixels);
-    glDrawPixels(START_WIDTH, START_HEIGHT, GL_RGBA, GL_FLOAT, globals.overlayPixels);
 }
 
 /*Inserts a pixel colour into an array that will be used for glDrawPixels().
@@ -114,7 +113,8 @@ void addOverlayEffects(){
     int pixelY;
     
     Vector3D vpToLightRay;
-    
+    ShapeData * intersectedShape;
+    Point3D intersection;
     
     vpToLightRay.position.x = globals.viewPoint.x;
     vpToLightRay.position.y = globals.viewPoint.y;
@@ -127,21 +127,44 @@ void addOverlayEffects(){
         vpToLightRay.direction.z = globals.lights[i].position.z - globals.viewPoint.z;
         vpToLightRay = normalize(vpToLightRay);
         
-        getIntersectedScreenPixel(vpToLightRay, &pixelX, &pixelY);
-        
-        for(j = 0; j < 3; j++){
-            for(k = 0; k < 3; k++){
-                insertOverlayPixel(globals.overlayPixels, START_WIDTH, START_HEIGHT, pixelX+k, pixelY+j, globals.lights[i].colour.red, globals.lights[i].colour.green, globals.lights[i].colour.blue, 0.0);
-                
-                insertOverlayPixel(globals.overlayPixels, START_WIDTH, START_HEIGHT, pixelX-k, pixelY-j, globals.lights[i].colour.red, globals.lights[i].colour.green, globals.lights[i].colour.blue, 0.0);
-                
-                insertOverlayPixel(globals.overlayPixels, START_WIDTH, START_HEIGHT, pixelX-k, pixelY+j, globals.lights[i].colour.red, globals.lights[i].colour.green, globals.lights[i].colour.blue, 0.0);
-                
-                insertOverlayPixel(globals.overlayPixels, START_WIDTH, START_HEIGHT, pixelX+k, pixelY-j, globals.lights[i].colour.red, globals.lights[i].colour.green, globals.lights[i].colour.blue, 0.0);
+        intersectedShape = getFirstIntersectedShape(vpToLightRay);
+        if(intersectedShape == NULL){
+            /*The light is visible*/
+            if(globals.lensFlares == false){
+                getIntersectedScreenPixel(vpToLightRay, &pixelX, &pixelY);
+                addLightBlot(globals.lights[i], pixelX, pixelY);
+            }
+        }
+        else{
+            /*Is the shape in front or behind the light?*/
+            intersection = getIntersection(*intersectedShape, vpToLightRay);
+            
+            if(getLength(vpToLightRay.position, globals.lights[i].position) < getLength(vpToLightRay.position, intersection)){
+                /*Light is in front of the object*/
+                if(globals.lensFlares == false){
+                    getIntersectedScreenPixel(vpToLightRay, &pixelX, &pixelY);
+                    addLightBlot(globals.lights[i], pixelX, pixelY);
+                }
             }
         }
     }
     
 }
 
+/*Puts white pixels in a 3-pixel radius of the specified pixel coordinates.*/
+void addLightBlot(LightData light, int pixelX, int pixelY){
+    int i, j;
+    
+    for(i = 0; i < 3; i++){
+        for(j = 0; j < 3; j++){
+            insertOverlayPixel(globals.overlayPixels, START_WIDTH, START_HEIGHT, pixelX+j, pixelY+i, light.colour.red, light.colour.green, light.colour.blue, 0.0);
+            
+            insertOverlayPixel(globals.overlayPixels, START_WIDTH, START_HEIGHT, pixelX-j, pixelY-i, light.colour.red, light.colour.green, light.colour.blue, 0.0);
+            
+            insertOverlayPixel(globals.overlayPixels, START_WIDTH, START_HEIGHT, pixelX-j, pixelY+i, light.colour.red, light.colour.green, light.colour.blue, 0.0);
+            
+            insertOverlayPixel(globals.overlayPixels, START_WIDTH, START_HEIGHT, pixelX+j, pixelY-i, light.colour.red, light.colour.green, light.colour.blue, 0.0);
+        }
+    }
+}
 

@@ -8,6 +8,8 @@ void parseFile(char * inputFilePath){
     char * shapeToken = NULL;
     int lineCounter = 0;
     
+    GLfloat currentReflection = 0.0;
+    GLfloat currentOpacity = 1.0;
     GLfloat currentRefractIndex = 1.0;
     
     if(fp == NULL){
@@ -28,6 +30,9 @@ void parseFile(char * inputFilePath){
             }
             else if(strcmp(shapeToken, "light") == 0){
                 parseLight();
+            }
+            else if(strcmp(shapeToken, "lens") == 0){
+                parseLens();
             }
             else{
                 /*Lines starting with '#' are comments, and are ignored*/
@@ -377,6 +382,79 @@ void parseLight(){
     globals.lights[globals.numberOfLights] = parsedLight;
     printLight(globals.lights[globals.numberOfLights]);
     globals.numberOfLights++;
+}
+
+
+void parseLens(){
+    char * token;
+    LensData parsedLens;
+    
+    /*Z-Offset from the view plane (automatically centered at x = 0 and y = 0)*/
+    token = strtok(NULL, ",; \t\n");
+    if(token != NULL){
+        parsedLens.position.z = atof(token);
+    }
+    else{
+        printf("Parse error: Missing parameter for lens %d: x position.\n", globals.numberOfLenses);
+        return;
+    }
+    
+    parsedLens.position.x = globals.viewPlane[0][0].x + (globals.planeWidth / 2);
+    parsedLens.position.y = globals.viewPlane[0][0].y - (globals.planeHeight / 2);
+    
+    
+    /*Radius - to define the curvature (think: sphere)*/
+    token = strtok(NULL, ",; \t\n");
+    if(token != NULL){
+        parsedLens.radius = atof(token);
+    }
+    else{
+        printf("Parse error: Missing parameter for lens %d: Radius.\n", globals.numberOfLenses);
+        return;
+    }
+    
+    /*Concave part or convex part?*/
+    token = strtok(NULL, ",; \t\n");
+    if(token != NULL){
+        if(strcmp(token, "convex") == 0){
+            parsedLens.isConvex = true;
+            
+            /*Position the lens properly, rather than at the center of a would-be sphere
+              (i.e. the middle of the lens actually being at the specified coords)*/
+            parsedLens.position.z = parsedLens.position.z + parsedLens.radius;
+        }
+        else if(strcmp(token, "concave") == 0){
+            parsedLens.isConvex = false;
+            
+            /*Position the lens properly, rather than at the center of a would-be sphere*/
+            parsedLens.position.z = parsedLens.position.z - parsedLens.radius;
+        }
+        else{
+            printf("Parse error: Invalid parameter for lens %d: Concavity.\n", globals.numberOfLenses);
+            printf("\tAccepted strings (no quotes): \"concave\", \"convex\"\n");
+            printf("\tDefaulting to convex.\n");
+            parsedLens.isConvex = true;
+        }
+    }
+    else{
+        printf("Parse error: Missing parameter for lens %d: Concavity.\n", globals.numberOfLenses);
+        return;
+    }
+    
+    /*Refractive index*/
+    token = strtok(NULL, ",; \t\n");
+    if(token != NULL){
+        parsedLens.refractionIndex = atof(token);
+    }
+    else{
+        printf("Parse error: Missing parameter for lens %d: Index of Refraction.\n", globals.numberOfLenses);
+        return;
+    }
+    
+    globals.lenses = realloc(globals.lenses, sizeof(LensData) * (globals.numberOfLenses + 1));
+    globals.lenses[globals.numberOfLenses] = parsedLens;
+    printLens(globals.lenses[globals.numberOfLenses]);
+    globals.numberOfLenses++;
 }
 
 

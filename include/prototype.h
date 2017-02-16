@@ -19,6 +19,7 @@ void parseFile(char * inputFilePath);
 void parseTriangle(GLfloat refractIndex);
 void parseSphere(GLfloat refractIndex);
 void parseLight();
+void parseLens();
 GLfloat parseRefractionSetting();
 
 void deallocExit(int exitCode);
@@ -32,6 +33,7 @@ void keyboard(unsigned char key, int x, int y);
 /*Shape functions*/
 void printShape(ShapeData shape);
 void printLight(LightData light);
+void printLens(LensData lens);
 Point3D getIntersection(ShapeData theShape, Vector3D ray);
 Point3D sphereIntersection(Sphere theSphere, Vector3D ray);
 Point3D triangleIntersection(Triangle theSphere, Vector3D ray);
@@ -70,6 +72,7 @@ void insertPixel(GLfloat * pixelArray, int width, int height, int x, int y, GLfl
 void insertOverlayPixel(GLfloat * pixelArray, int width, int height, int x, int y, GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 void getIntersectedScreenPixel(Vector3D v, int * pixelXstorage, int * pixelYstorage);
 void addOverlayEffects();
+void addLightBlot(LightData light, int pixelX, int pixelY);
 
 /*Interface drawing functions*/
 void initLoadingBar();
