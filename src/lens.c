@@ -2,6 +2,21 @@
 
 extern GlobalVars globals;
 
+
+void printLens(LensData lens){
+    printf("Lens contents:\n");
+    printf("\tPosition: %.2f, %.2f, %.2f\n", lens.position.x, lens.position.y, lens.position.z);
+    printf("\tRadius: %.2f\n", lens.radius);
+    if(lens.isConvex == true){
+        printf("\tConvex\n");
+    }
+    else{
+        printf("\tConcave\n");
+    }
+    printf("\n");
+}
+
+
 /*Lens intersection. Basically the same as a sphere except with another check for concavity*/
 Point3D lensIntersection(LensData lens, Vector3D ray){
     Point3D intersection1;
@@ -105,3 +120,48 @@ Vector3D lensNormal(LensData lens, Point3D pointOnLens){
     
     return normalVector;
 }
+
+/*Makeshift bubble sort for the lens list*/
+void sortLensList(){
+    int unsortedLenses = globals.numberOfLenses;
+    double highestZdistance = -1;
+    int farthestLensIndex = 0;
+    LensData lensBuffer;
+    
+    int i;
+    
+    while(unsortedLenses > 0){
+        /*Find the unsorted lens farthest from the viewplane, and move it to the end of
+         the array of *unsorted* lenses. Repeat until all lenses are sorted.*/
+        highestZdistance = -1;
+        for(i = 0; i < unsortedLenses; i++){
+            if(globals.lenses[i].position.z > highestZdistance){
+                highestZdistance = globals.lenses[i].position.z;
+                farthestLensIndex = i;
+            }
+        }
+        
+        /*Swap lens positions if the lenses aren't in the right place*/
+        if(farthestLensIndex != (unsortedLenses - 1)){
+            lensBuffer = globals.lenses[unsortedLenses-1];
+            globals.lenses[unsortedLenses-1] = globals.lenses[farthestLensIndex];
+            globals.lenses[farthestLensIndex] = lensBuffer;
+        }
+        
+        unsortedLenses--;
+    }
+    
+}
+
+
+/*Sends a ray through all of the lenses, and gives the ray emerging from the other side.
+  Warning: this assumes the lenses do not overlap each other, like an actual
+  camera lens system. It also assumes the lenses are sorted.*/
+Vector3D traceLenses(Vector3D ray, int iterationLevel){
+    Vector3D endVector;
+    
+    
+    
+    return(endVector);
+}
+

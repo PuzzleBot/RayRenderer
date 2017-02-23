@@ -20,3 +20,6 @@ testRun:
 
 testRefract:
 	clang $(LIBS) $(TARGET) $(INCLUDES) src/shape.c src/vector.c tests/refractDriver.c -o bin/test.o
+
+testBessel:
+	clang $(LIBS) $(TARGET) $(INCLUDES) src/starburst.c tests/besselTest.c -o bin/test.o

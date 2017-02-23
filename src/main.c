@@ -9,6 +9,9 @@ void initGlobals(){
     globals.lights = NULL;
     globals.numberOfLights = 0;
     
+    globals.lenses = NULL;
+    globals.numberOfLenses = 0;
+    
     globals.pixels = calloc(START_WIDTH * START_HEIGHT * 3, sizeof(GLfloat));
     globals.overlayPixels = calloc(START_WIDTH * START_HEIGHT * 4, sizeof(GLfloat));
     globals.loadBarPixels = calloc(LOADBAR_WIDTH * LOADBAR_HEIGHT * 3, sizeof(GLfloat));

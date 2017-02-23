@@ -120,30 +120,41 @@ void addOverlayEffects(){
     vpToLightRay.position.y = globals.viewPoint.y;
     vpToLightRay.position.z = globals.viewPoint.z;
     
-    /*Put a few white pixels over the light*/
-    for(i = 0; i < globals.numberOfLights; i++){
-        vpToLightRay.direction.x = globals.lights[i].position.x - globals.viewPoint.x;
-        vpToLightRay.direction.y = globals.lights[i].position.y - globals.viewPoint.y;
-        vpToLightRay.direction.z = globals.lights[i].position.z - globals.viewPoint.z;
-        vpToLightRay = normalize(vpToLightRay);
-        
-        intersectedShape = getFirstIntersectedShape(vpToLightRay);
-        if(intersectedShape == NULL){
-            /*The light is visible*/
-            if(globals.lensFlares == false){
-                getIntersectedScreenPixel(vpToLightRay, &pixelX, &pixelY);
-                addLightBlot(globals.lights[i], pixelX, pixelY);
+    if(globals.lensFlares == true){
+        for(i = 0; i < globals.numberOfLights; i++){
+            for(j = 0; j < START_HEIGHT; j++){
+                for(k = 0; k < START_WIDTH; k++){
+                    
+                }
             }
         }
-        else{
-            /*Is the shape in front or behind the light?*/
-            intersection = getIntersection(*intersectedShape, vpToLightRay);
+    }
+    else{
+        /*Put a few white pixels over the light*/
+        for(i = 0; i < globals.numberOfLights; i++){
+            vpToLightRay.direction.x = globals.lights[i].position.x - globals.viewPoint.x;
+            vpToLightRay.direction.y = globals.lights[i].position.y - globals.viewPoint.y;
+            vpToLightRay.direction.z = globals.lights[i].position.z - globals.viewPoint.z;
+            vpToLightRay = normalize(vpToLightRay);
             
-            if(getLength(vpToLightRay.position, globals.lights[i].position) < getLength(vpToLightRay.position, intersection)){
-                /*Light is in front of the object*/
+            intersectedShape = getFirstIntersectedShape(vpToLightRay);
+            if(intersectedShape == NULL){
+                /*The light is visible*/
                 if(globals.lensFlares == false){
                     getIntersectedScreenPixel(vpToLightRay, &pixelX, &pixelY);
                     addLightBlot(globals.lights[i], pixelX, pixelY);
+                }
+            }
+            else{
+                /*Is the shape in front or behind the light?*/
+                intersection = getIntersection(*intersectedShape, vpToLightRay);
+                
+                if(getLength(vpToLightRay.position, globals.lights[i].position) < getLength(vpToLightRay.position, intersection)){
+                    /*Light is in front of the object*/
+                    if(globals.lensFlares == false){
+                        getIntersectedScreenPixel(vpToLightRay, &pixelX, &pixelY);
+                        addLightBlot(globals.lights[i], pixelX, pixelY);
+                    }
                 }
             }
         }

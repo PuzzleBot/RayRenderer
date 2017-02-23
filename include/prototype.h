@@ -48,6 +48,12 @@ Point3D planeIntersection(Vector3D planeNormal, Vector3D ray);
 /*Lens-specific functions (lens.c)*/
 Point3D lensIntersection(LensData lens, Vector3D ray);
 Vector3D lensNormal(LensData lens, Point3D pointOnLens);
+void sortLensList();
+Vector3D traceLenses(Vector3D ray, int iterationLevel);
+
+/*Math functions for the starburst effect (starburst.c)*/
+void drawStarburstTexture(LightData light, int x, int y);
+double sincOperation(long double x);
 
 
 /*Reflections and refractions (shape.c)*/

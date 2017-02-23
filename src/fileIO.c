@@ -45,6 +45,8 @@ void parseFile(char * inputFilePath){
     }
     while((feof(fp) == 0) && (ferror(fp) == 0));
     
+    sortLensList();
+    
 }
 
 void parseTriangle(GLfloat refractIndex){

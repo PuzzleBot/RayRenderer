@@ -31,19 +31,6 @@ void printLight(LightData light){
     printf("\n");
 }
 
-void printLens(LensData lens){
-    printf("Lens contents:\n");
-    printf("\tPosition: %.2f, %.2f, %.2f\n", lens.position.x, lens.position.y, lens.position.z);
-    printf("\tRadius: %.2f\n", lens.radius);
-    if(lens.isConvex == true){
-        printf("\tConvex");
-    }
-    else{
-        printf("\tConcave");
-    }
-    printf("\n");
-}
-
 
 Vector3D getNormal(ShapeData shape, Point3D pointOnShape){
     Vector3D nullVector;
