@@ -13,8 +13,6 @@ void drawPixels(){
     int nextIncrementPixel = totalPixels / loadbarSegments;
     
     Point3D currentPlanePosition;
-    double verticalMoveAmount = globals.planeHeight / START_HEIGHT;
-    double horizontalMoveAmount = globals.planeWidth / START_WIDTH;
     ColourRGB pixelColour;
     
     Vector3D currentRay;
@@ -30,9 +28,7 @@ void drawPixels(){
           (If reflectivity and transparency is on, repeat intersection tests for reflected rays)*/
     for(i = 0; i < START_HEIGHT; i++){
         for(j = 0; j < START_WIDTH; j++){
-            currentPlanePosition.x = globals.viewPlane[1][0].x + (j * horizontalMoveAmount);
-            currentPlanePosition.y = globals.viewPlane[1][0].y + (i * verticalMoveAmount);
-            currentPlanePosition.z = globals.viewPlane[1][0].z;
+            currentPlanePosition = getViewPlaneCoordinates(j, i);
             
             currentRay.direction.x = currentPlanePosition.x - globals.viewPoint.x;
             currentRay.direction.y = currentPlanePosition.y - globals.viewPoint.y;
@@ -53,7 +49,7 @@ void drawPixels(){
     }
     //free(globals.loadBarPixels);
     
-    addOverlayEffects();
+    computeOverlayEffects();
     
     glWindowPos2i(0, 0);
     glDrawPixels(START_WIDTH, START_HEIGHT, GL_RGB, GL_FLOAT, globals.pixels);
@@ -104,13 +100,19 @@ void getIntersectedScreenPixel(Vector3D v, int * pixelXstorage, int * pixelYstor
     *pixelYstorage = (int)((intersection.y + (globals.planeHeight / 2)) * (START_WIDTH / globals.planeWidth));
 }
 
-void addOverlayEffects(){
+void computeOverlayEffects(){
     int i;
     int j;
     int k;
     
     int pixelX;
     int pixelY;
+    
+    /*Loading bar variables*/
+    int loadbarSegments = (LOADBAR_WIDTH - 20) / LOADBAR_SEGMENT_PIXELS;
+    int totalPixels = START_WIDTH * START_HEIGHT;
+    int nextLoadSegment = 1;
+    int nextIncrementPixel = totalPixels / loadbarSegments;
     
     Vector3D vpToLightRay;
     ShapeData * intersectedShape;
@@ -120,11 +122,47 @@ void addOverlayEffects(){
     vpToLightRay.position.y = globals.viewPoint.y;
     vpToLightRay.position.z = globals.viewPoint.z;
     
+    initLoadingBar();
+    
     if(globals.lensFlares == true){
         for(i = 0; i < globals.numberOfLights; i++){
+            vpToLightRay.direction.x = globals.lights[i].position.x - globals.viewPoint.x;
+            vpToLightRay.direction.y = globals.lights[i].position.y - globals.viewPoint.y;
+            vpToLightRay.direction.z = globals.lights[i].position.z - globals.viewPoint.z;
+            vpToLightRay = normalize(vpToLightRay);
+            
+            /*Compute the starburst texture*/
             for(j = 0; j < START_HEIGHT; j++){
                 for(k = 0; k < START_WIDTH; k++){
+                    getIntersectedScreenPixel(vpToLightRay, &pixelX, &pixelY);
+                    computeStarburstTexture(globals.lights[i], k, j, pixelX, pixelY);
                     
+                    /*Update the loading bar accordingly, based on the number of pixels
+                     calculated so far out of total pixels*/
+                    if((j * START_WIDTH) + k >= nextIncrementPixel){
+                        incrementLoadingBar();
+                        nextLoadSegment++;
+                        nextIncrementPixel = nextLoadSegment * (totalPixels / loadbarSegments);
+                    }
+                }
+            }
+            
+            intersectedShape = getFirstIntersectedShape(vpToLightRay);
+            if(intersectedShape == NULL){
+                /*No shapes between the viewpoint and shape - draw the texture on top
+                  of the scene*/
+            }
+            else{
+                /*Is the shape in front or behind the light?*/
+                intersection = getIntersection(*intersectedShape, vpToLightRay);
+                
+                if(getLength(vpToLightRay.position, globals.lights[i].position) < getLength(vpToLightRay.position, intersection)){
+                    /*Light is in front of the object - draw the texture on top
+                     of the scene*/
+                    
+                }
+                else{
+                    /*Light is behind the object...*/
                 }
             }
         }
@@ -138,14 +176,7 @@ void addOverlayEffects(){
             vpToLightRay = normalize(vpToLightRay);
             
             intersectedShape = getFirstIntersectedShape(vpToLightRay);
-            if(intersectedShape == NULL){
-                /*The light is visible*/
-                if(globals.lensFlares == false){
-                    getIntersectedScreenPixel(vpToLightRay, &pixelX, &pixelY);
-                    addLightBlot(globals.lights[i], pixelX, pixelY);
-                }
-            }
-            else{
+            if(intersectedShape != NULL){
                 /*Is the shape in front or behind the light?*/
                 intersection = getIntersection(*intersectedShape, vpToLightRay);
                 
@@ -168,13 +199,13 @@ void addLightBlot(LightData light, int pixelX, int pixelY){
     
     for(i = 0; i < 3; i++){
         for(j = 0; j < 3; j++){
-            insertOverlayPixel(globals.overlayPixels, START_WIDTH, START_HEIGHT, pixelX+j, pixelY+i, light.colour.red, light.colour.green, light.colour.blue, 0.0);
+            insertOverlayPixel(globals.starburstTexturePixels, START_WIDTH, START_HEIGHT, pixelX+j, pixelY+i, light.colour.red, light.colour.green, light.colour.blue, 0.0);
             
-            insertOverlayPixel(globals.overlayPixels, START_WIDTH, START_HEIGHT, pixelX-j, pixelY-i, light.colour.red, light.colour.green, light.colour.blue, 0.0);
+            insertOverlayPixel(globals.starburstTexturePixels, START_WIDTH, START_HEIGHT, pixelX-j, pixelY-i, light.colour.red, light.colour.green, light.colour.blue, 0.0);
             
-            insertOverlayPixel(globals.overlayPixels, START_WIDTH, START_HEIGHT, pixelX-j, pixelY+i, light.colour.red, light.colour.green, light.colour.blue, 0.0);
+            insertOverlayPixel(globals.starburstTexturePixels, START_WIDTH, START_HEIGHT, pixelX-j, pixelY+i, light.colour.red, light.colour.green, light.colour.blue, 0.0);
             
-            insertOverlayPixel(globals.overlayPixels, START_WIDTH, START_HEIGHT, pixelX+j, pixelY-i, light.colour.red, light.colour.green, light.colour.blue, 0.0);
+            insertOverlayPixel(globals.starburstTexturePixels, START_WIDTH, START_HEIGHT, pixelX+j, pixelY-i, light.colour.red, light.colour.green, light.colour.blue, 0.0);
         }
     }
 }

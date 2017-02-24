@@ -13,12 +13,13 @@ void initGlobals(){
     globals.numberOfLenses = 0;
     
     globals.pixels = calloc(START_WIDTH * START_HEIGHT * 3, sizeof(GLfloat));
-    globals.overlayPixels = calloc(START_WIDTH * START_HEIGHT * 4, sizeof(GLfloat));
     globals.loadBarPixels = calloc(LOADBAR_WIDTH * LOADBAR_HEIGHT * 3, sizeof(GLfloat));
     globals.drawingDone = 0;
     
+    globals.starburstTexturePixels = calloc(START_WIDTH * START_HEIGHT * 4, sizeof(GLfloat));
+    
     /*Enough memory?*/
-    if((globals.pixels == NULL) || (globals.overlayPixels == NULL) || (globals.loadBarPixels == NULL)){
+    if((globals.pixels == NULL) || (globals.starburstTexturePixels == NULL) || (globals.loadBarPixels == NULL)){
         printf("Not enough memory.\n");
         exit(0);
     }
@@ -57,7 +58,7 @@ void initGlobals(){
     globals.reflections = true;
     globals.refractions = true;
     globals.transparency = true;
-    globals.lensFlares = false;
+    globals.lensFlares = true;
     
     globals.ambientCoefficient = 0.2;
     globals.ambientColour.red = 1.0;
@@ -107,6 +108,6 @@ void deallocExit(int exitCode){
     
     free(globals.pixels);
     free(globals.loadBarPixels);
-    free(globals.overlayPixels);
+    free(globals.starburstTexturePixels);
     exit(exitCode);
 }

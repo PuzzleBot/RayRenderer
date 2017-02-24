@@ -1,5 +1,7 @@
 #include "raytrace.h"
 
+extern GlobalVars globals;
+
 /*Intersection test between a ray and a shape (algorithm dependent on shape type)
   Sort-of polymorphism*/
 Point3D getIntersection(ShapeData shape, Vector3D ray){
@@ -268,4 +270,18 @@ Point3D planeIntersection(Vector3D planeNormal, Vector3D ray){
         
         return(intersection);
     }
+}
+
+/*Get the point on the plane corresponding to the given x and y*/
+Point3D getViewPlaneCoordinates(int x, int y){
+    Point3D planePosition;
+    
+    double verticalMoveAmount = globals.planeHeight / START_HEIGHT;
+    double horizontalMoveAmount = globals.planeWidth / START_WIDTH;
+    
+    planePosition.x = globals.viewPlane[1][0].x + (x * horizontalMoveAmount);
+    planePosition.y = globals.viewPlane[1][0].y + (y * verticalMoveAmount);
+    planePosition.z = globals.viewPlane[1][0].z;
+    
+    return planePosition;
 }

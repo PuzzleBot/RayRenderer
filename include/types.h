@@ -104,9 +104,11 @@ typedef struct{
     
     /*Pixel colour arrays*/
     GLfloat * pixels;
-    GLfloat * overlayPixels;
     GLfloat * loadBarPixels;
     int drawingDone;
+    
+    /*Starburst texture*/
+    GLfloat * starburstTexturePixels;
     
     /*Width and height of the viewing plane*/
     double planeWidth;

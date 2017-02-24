@@ -38,12 +38,14 @@ Point3D getIntersection(ShapeData theShape, Vector3D ray);
 Point3D sphereIntersection(Sphere theSphere, Vector3D ray);
 Point3D triangleIntersection(Triangle theSphere, Vector3D ray);
 Point3D polygonIntersection(Polygon thePoly, Vector3D ray);
+Point3D planeIntersection(Vector3D planeNormal, Vector3D ray);
+Point3D getViewPlaneCoordinates(int x, int y);
 
 Vector3D getNormal(ShapeData shape, Point3D pointOnShape);
 Vector3D sphereNormal(Sphere sphere, Point3D pointOnShape);
 Vector3D triangleNormal(Triangle triangle, Point3D pointOnShape);
 Vector3D polygonNormal(Polygon poly, Point3D pointOnShape);
-Point3D planeIntersection(Vector3D planeNormal, Vector3D ray);
+
 
 /*Lens-specific functions (lens.c)*/
 Point3D lensIntersection(LensData lens, Vector3D ray);
@@ -52,7 +54,7 @@ void sortLensList();
 Vector3D traceLenses(Vector3D ray, int iterationLevel);
 
 /*Math functions for the starburst effect (starburst.c)*/
-void drawStarburstTexture(LightData light, int x, int y);
+void computeStarburstTexture(LightData light, int x, int y, int lightPixelX, int lightPixelY);
 double sincOperation(long double x);
 
 
@@ -83,7 +85,7 @@ void drawPixels();
 void insertPixel(GLfloat * pixelArray, int width, int height, int x, int y, GLfloat r, GLfloat g, GLfloat b);
 void insertOverlayPixel(GLfloat * pixelArray, int width, int height, int x, int y, GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 void getIntersectedScreenPixel(Vector3D v, int * pixelXstorage, int * pixelYstorage);
-void addOverlayEffects();
+void computeOverlayEffects();
 void addLightBlot(LightData light, int pixelX, int pixelY);
 
 /*Interface drawing functions (interface.c)*/
