@@ -107,6 +107,9 @@ typedef struct{
     GLfloat * loadBarPixels;
     int drawingDone;
     
+    /*Traced objects without lens flare effects*/
+    GLfloat * objectPixels;
+    
     /*Starburst texture*/
     GLfloat * starburstTexturePixels;
     

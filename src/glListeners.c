@@ -40,6 +40,10 @@ void keyboard(unsigned char key, int x, int y){
             glFlush();
             break;
         case '2':
+            glDrawPixels(START_WIDTH, START_HEIGHT, GL_RGB, GL_FLOAT, globals.objectPixels);
+            glFlush();
+            break;
+        case '3':
             glDrawPixels(START_WIDTH, START_HEIGHT, GL_RGBA, GL_FLOAT, globals.starburstTexturePixels);
             glFlush();
             break;

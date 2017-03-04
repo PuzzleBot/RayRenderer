@@ -16,10 +16,11 @@ void initGlobals(){
     globals.loadBarPixels = calloc(LOADBAR_WIDTH * LOADBAR_HEIGHT * 3, sizeof(GLfloat));
     globals.drawingDone = 0;
     
+    globals.objectPixels = calloc(START_WIDTH * START_HEIGHT * 3, sizeof(GLfloat));
     globals.starburstTexturePixels = calloc(START_WIDTH * START_HEIGHT * 4, sizeof(GLfloat));
     
     /*Enough memory?*/
-    if((globals.pixels == NULL) || (globals.starburstTexturePixels == NULL) || (globals.loadBarPixels == NULL)){
+    if((globals.pixels == NULL) || (globals.starburstTexturePixels == NULL) || (globals.loadBarPixels == NULL) || (globals.objectPixels == NULL)){
         printf("Not enough memory.\n");
         exit(0);
     }
@@ -108,6 +109,7 @@ void deallocExit(int exitCode){
     
     free(globals.pixels);
     free(globals.loadBarPixels);
+    free(globals.objectPixels);
     free(globals.starburstTexturePixels);
     exit(exitCode);
 }

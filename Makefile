@@ -12,6 +12,9 @@ raytracer.o: include/raytrace.h src/main.c
 run:
 	./bin/raytracer.o $(FILE)
 
+runFlare:
+	./bin/raytracer.o inputs/triReflect.csv
+
 testTriangle:
 	clang $(LIBS) $(TARGET) $(INCLUDES) src/intersection.c src/vector.c tests/triangleDriver.c -o bin/test.o
 

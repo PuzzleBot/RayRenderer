@@ -87,6 +87,7 @@ void insertOverlayPixel(GLfloat * pixelArray, int width, int height, int x, int 
 void getIntersectedScreenPixel(Vector3D v, int * pixelXstorage, int * pixelYstorage);
 void computeOverlayEffects();
 void addLightBlot(LightData light, int pixelX, int pixelY);
+void combinePixelColours(GLfloat * objectPixels, GLfloat * texturePixels, int width, int height, int x, int y);
 
 /*Interface drawing functions (interface.c)*/
 void initLoadingBar();
