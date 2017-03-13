@@ -71,6 +71,7 @@ double getLengthFromOrigin(Point3D end);
 Vector3D pointToVector(Point3D point);
 Boolean isInRayPath(Vector3D ray, Point3D testPoint);
 double angleBetween(Vector3D v1, Vector3D v2);
+void printVector(Vector3D vector);
 
 /*Define a "NULL" for points and a check for it (vector.c)*/
 Point3D nullPoint();

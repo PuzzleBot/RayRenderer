@@ -25,7 +25,7 @@ typedef struct{
 typedef struct{
     /*Position of the vector's start*/
     Point3D position;
-    
+
     /*Direction of the vector, stored as a point in relation to the origin*/
     Point3D direction;
 } Vector3D;
@@ -81,7 +81,12 @@ typedef struct{
 
 /*Lenses are basically half-spheres that are transparent*/
 typedef struct{
+    /*Position of the center if it was a full sphere*/
     Point3D position;
+
+    /*Actual position of the lens center*/
+    Point3D truePosition;
+
     double radius;
     Boolean isConvex;
     GLfloat refractionIndex;
@@ -93,52 +98,53 @@ typedef struct{
     /*Array of shapes*/
     ShapeData * shapes;
     int numberOfShapes;
-    
+
     /*Array of point light sources*/
     LightData * lights;
     int numberOfLights;
-    
+
     /*Array of camera lenses to simulate*/
     LensData * lenses;
     int numberOfLenses;
-    
+
     /*Pixel colour arrays*/
     GLfloat * pixels;
     GLfloat * loadBarPixels;
     int drawingDone;
-    
+
     /*Traced objects without lens flare effects*/
     GLfloat * objectPixels;
-    
+
     /*Starburst texture*/
     GLfloat * starburstTexturePixels;
-    
+
     /*Width and height of the viewing plane*/
     double planeWidth;
     double planeHeight;
-    
+
     /*Viewpoint position: Rays will start from this point*/
     Point3D viewPoint;
-    
+
     /*A square defining the viewing plane. Should always be aligned with two axes.*/
     Point3D viewPlane[2][2];
-    
+
     /*Toggles for different effects*/
     Boolean reflections;
     Boolean refractions;
     Boolean transparency;
     Boolean lensFlares;
-    
+    Boolean realLenses;
+
     /*Coefficients for the illumination model*/
     double ambientCoefficient;
     ColourRGB ambientColour;
-    
+
     double diffuseCoefficient;
     double specularCoefficient;
     int specularFiness;
     double lightAttenuation;
-    
+
     /*Maximum number of reflections and refractions*/
     int maxTraceIterations;
-    
+
 } GlobalVars;

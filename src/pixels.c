@@ -26,6 +26,7 @@ void drawPixels(){
     /*For each pixel on the screen, calculate pixel colour (bottom-left to top-right)
           Pixel colour determined by ray reflecting off of the first intersected object to the light source
           (If reflectivity and transparency is on, repeat intersection tests for reflected rays)*/
+    sortLensList();
     for(i = 0; i < START_HEIGHT; i++){
         for(j = 0; j < START_WIDTH; j++){
             currentPlanePosition = getViewPlaneCoordinates(j, i);
@@ -79,11 +80,13 @@ void insertOverlayPixel(GLfloat * pixelArray, int width, int height, int x, int 
 
 
 void getIntersectedScreenPixel(Vector3D v, int * pixelXstorage, int * pixelYstorage){
-    double zScale = globals.viewPlane[0][0].z - v.position.z;
+    double zScale;
     Point3D intersection;
 
     double verticalMoveAmount = globals.planeHeight / START_HEIGHT;
     double horizontalMoveAmount = globals.planeWidth / START_WIDTH;
+
+    zScale = globals.viewPlane[0][0].z - v.position.z;
 
     /*Scale the direction so that z equals 1*/
     v.direction.x = v.direction.x / v.direction.z;

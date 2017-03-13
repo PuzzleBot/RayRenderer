@@ -50,7 +50,7 @@ void computeStarburstTexture(LightData light, int x, int y, int lightPixelX, int
     xPrime = x - lightPixelX;
     yPrime = y - lightPixelY;
 
-    planePointLength = (getLength(viewPlaneCoordinates, globals.viewPoint) * 10);
+    planePointLength = (20000 / (getLength(viewPlaneCoordinates, light.position)));
     thetaX =  sin(atan(xPrime/planePointLength));
     thetaY =  sin(atan(yPrime/planePointLength));
 

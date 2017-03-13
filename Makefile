@@ -15,14 +15,21 @@ run:
 runFlare:
 	./bin/raytracer.o inputs/triReflect.csv
 
+runLens:
+	./bin/raytracer.o inputs/lens.csv
+
+
 testTriangle:
 	clang $(LIBS) $(TARGET) $(INCLUDES) src/intersection.c src/vector.c tests/triangleDriver.c -o bin/test.o
+
 
 testRun:
 	./bin/test.o
 
+
 testRefract:
 	clang $(LIBS) $(TARGET) $(INCLUDES) src/shape.c src/vector.c tests/refractDriver.c -o bin/test.o
+
 
 testBessel:
 	clang $(LIBS) $(TARGET) $(INCLUDES) src/starburst.c tests/besselTest.c -o bin/test.o
