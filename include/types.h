@@ -15,6 +15,7 @@
 typedef enum{false, true} Boolean;
 
 
+
 /*Vector structures*/
 typedef struct{
     double x;
@@ -30,11 +31,37 @@ typedef struct{
     Point3D direction;
 } Vector3D;
 
+
+typedef struct{
+    double x;
+    double y;
+} Point2D;
+
+typedef struct{
+    /*Position of the vector's start*/
+    Point2D position;
+
+    /*Direction of the vector, stored as a point in relation to the origin*/
+    Point2D direction;
+} Vector2D;
+
+
 typedef struct{
     GLfloat red;
     GLfloat green;
     GLfloat blue;
 } ColourRGB;
+
+
+
+/*List structure for indices*/
+typedef struct IntList{
+    int x;
+    int y;
+
+    struct IntList * next;
+} IntegerList;
+
 
 
 /*Shape structures*/
@@ -117,6 +144,9 @@ typedef struct{
 
     /*Starburst texture*/
     GLfloat * starburstTexturePixels;
+
+    /*Ghost texture*/
+    GLfloat * ghostTexturePixels;
 
     /*Width and height of the viewing plane*/
     double planeWidth;

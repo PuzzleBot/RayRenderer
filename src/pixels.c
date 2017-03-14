@@ -66,6 +66,11 @@ void insertPixel(GLfloat * pixelArray, int width, int height, int x, int y, GLfl
     pixelArray[(y * width * 3) + (x * 3) + 2] = b;
 }
 
+GLfloat getPixel(GLfloat * pixelArray, int width, int height, int x, int y, int rgbOption){
+    /*rgba = 0 -> red, 1-> green, 2-> blue*/
+    return pixelArray[(y * width * 3) + (x * 3) + rgbOption];
+}
+
 
 /*Inserts a pixel colour with alpha value into an array that will be used for
   glDrawPixels(). Unlike the above function, this one also takes in an alpha
@@ -77,6 +82,22 @@ void insertOverlayPixel(GLfloat * pixelArray, int width, int height, int x, int 
     pixelArray[(y * width * 4) + (x * 4) + 2] = b;
     pixelArray[(y * width * 4) + (x * 4) + 3] = a;
 }
+
+void blendOverlayPixel(GLfloat * pixelArray, int width, int height, int x, int y, GLfloat r, GLfloat g, GLfloat b, GLfloat a){
+    /*Treating a 1D array like a 2D one*/
+    pixelArray[(y * width * 4) + (x * 4)] = r;
+    pixelArray[(y * width * 4) + (x * 4) + 1] = g;
+    pixelArray[(y * width * 4) + (x * 4) + 2] = b;
+    pixelArray[(y * width * 4) + (x * 4) + 3] = a;
+}
+
+GLfloat getOverlayPixel(GLfloat * pixelArray, int width, int height, int x, int y, int rgbaOption){
+    /*rgba = 0 -> red, 1-> green, 2-> blue, 3-> alpha*/
+    return pixelArray[(y * width * 4) + (x * 4) + rgbaOption];
+}
+
+
+
 
 
 void getIntersectedScreenPixel(Vector3D v, int * pixelXstorage, int * pixelYstorage){
@@ -185,6 +206,9 @@ void computeOverlayEffects(){
                 }
             }
         }
+
+        /*EDIT HERE*/
+        generateGhostTexture();
     }
     else{
         /*Put a few white pixels over the light*/
@@ -240,7 +264,7 @@ void combinePixelColours(GLfloat * objectPixels, GLfloat * texturePixels, int wi
     GLfloat finalRed;
     GLfloat finalGreen;
     GLfloat finalBlue;
-    GLfloat textureTransparency = texturePixels[(y * width * 4) + (x * 4) + 3] * 1.1;
+    GLfloat textureTransparency = texturePixels[(y * width * 4) + (x * 4) + 3] * 1.0;
 
 
     finalRed = (objectPixels[(y * width * 3) + (x * 3)] * (1.0 - textureTransparency))

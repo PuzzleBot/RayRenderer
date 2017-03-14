@@ -58,6 +58,14 @@ void computeStarburstTexture(LightData light, int x, int y, int lightPixelX, int
 double sincOperation(long double x);
 
 
+/*Pseudo-ghost computation functions (pseudoGhost.c)*/
+void generateGhostTexture(Point2D lightCenter, double starburstCoreRadius);
+IntegerList * integerList_addToFront(IntegerList * list, int x, int y);
+void integerList_destroyList(IntegerList * list);
+IntegerList * sampleAllBrightSpots(GLfloat * pixels);
+void copyAndRescaleBrightSpots(GLfloat * starburstPixels, GLfloat * ghostPixels, IntegerList * brightPixelIndexList, double newXcenter, double newYcenter, double horizontalScale, double verticalScale, double opacity);
+
+
 /*Reflections and refractions (shape.c)*/
 Vector3D getReflection(Vector3D lightToIntersection, Vector3D normal, Point3D intersection);
 Vector3D getRefraction(Vector3D rayToIntersection, Vector3D normal, double oldRefractIndex, double newRefractIndex, Point3D intersection);
@@ -68,6 +76,12 @@ double dotProduct(Vector3D v1, Vector3D v2);
 Vector3D normalize(Vector3D v);
 double getLength(Point3D start, Point3D end);
 double getLengthFromOrigin(Point3D end);
+
+Vector2D getPerpendicular(Vector2D v);
+double dotProduct2D(Vector2D v1, Vector2D v2);
+Vector2D normalize2D(Vector2D v);
+double getLength2D(Point2D start, Point2D end);
+
 Vector3D pointToVector(Point3D point);
 Boolean isInRayPath(Vector3D ray, Point3D testPoint);
 double angleBetween(Vector3D v1, Vector3D v2);
@@ -84,7 +98,9 @@ ShapeData * getFirstIntersectedShape(Vector3D ray);
 /*Pixel drawing functions (pixels.c)*/
 void drawPixels();
 void insertPixel(GLfloat * pixelArray, int width, int height, int x, int y, GLfloat r, GLfloat g, GLfloat b);
+GLfloat getOverlayPixel(GLfloat * pixelArray, int width, int height, int x, int y, int rgbOption);
 void insertOverlayPixel(GLfloat * pixelArray, int width, int height, int x, int y, GLfloat r, GLfloat g, GLfloat b, GLfloat a);
+GLfloat getOverlayPixel(GLfloat * pixelArray, int width, int height, int x, int y, int rgbaOption);
 void getIntersectedScreenPixel(Vector3D v, int * pixelXstorage, int * pixelYstorage);
 void computeOverlayEffects();
 void addLightBlot(LightData light, int pixelX, int pixelY);

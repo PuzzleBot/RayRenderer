@@ -57,6 +57,42 @@ Vector3D pointToVector(Point3D point){
     return(vector);
 }
 
+
+Vector2D getPerpendicular(Vector2D v){
+    Vector2D newVector;
+    newVector.position = v.position;
+
+    newVector.direction.x = -v.direction.y;
+    newVector.direction.y = v.direction.x;
+
+    return newVector;
+}
+
+/*Standard dot product function. Perform Arccos on the return value for the angle
+  between the two vectors.*/
+double dotProduct2D(Vector2D v1, Vector2D v2){
+    return( ((v1.direction.x) * (v2.direction.x)) +
+            ((v1.direction.y) * (v2.direction.y)) );
+}
+
+
+/*Returns a version of the input vector that has a length 1 direction.*/
+Vector2D normalize2D(Vector2D v){
+    double length = (sqrt(pow(v.direction.x, 2) + pow(v.direction.y, 2)));
+
+    v.direction.x = v.direction.x / length;
+    v.direction.y = v.direction.y / length;
+
+    return v;
+}
+
+double getLength2D(Point2D start, Point2D end){
+    return(sqrt(pow(end.x - start.x, 2) + pow(end.y - start.y, 2)));
+}
+
+
+
+
 /*Returns true if the point is on the vector and in the direction of the vector.
   Returns false otherwise.*/
 Boolean isInRayPath(Vector3D ray, Point3D testPoint){
