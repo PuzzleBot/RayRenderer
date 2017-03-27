@@ -207,8 +207,16 @@ void computeOverlayEffects(){
             }
         }
 
-        /*EDIT HERE*/
-        generateGhostTexture();
+        /*Generate ghosts*/
+
+        if(globals.ghosts == true){
+            generateGhostTexture();
+            for(j = 0; j < START_HEIGHT; j++){
+                for(k = 0; k < START_WIDTH; k++){
+                    combinePixelColours(globals.objectPixels, globals.ghostTexturePixels, START_WIDTH, START_HEIGHT, k, j);
+                }
+            }
+        }
     }
     else{
         /*Put a few white pixels over the light*/
@@ -275,4 +283,9 @@ void combinePixelColours(GLfloat * objectPixels, GLfloat * texturePixels, int wi
               + (texturePixels[(y * width * 4) + (x * 4) + 2] * (textureTransparency));
 
     insertPixel(globals.pixels, width, height, x, y, finalRed, finalGreen, finalBlue);
+}
+
+void combineAllGlobalPixels(int x, int y){
+    combinePixelColours(globals.objectPixels, globals.starburstTexturePixels, START_WIDTH, START_HEIGHT, x, y);
+    combinePixelColours(globals.objectPixels, globals.ghostTexturePixels, START_WIDTH, START_HEIGHT, x, y);
 }

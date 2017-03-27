@@ -62,6 +62,7 @@ void initGlobals(){
     globals.transparency = true;
     globals.lensFlares = true;
     globals.realLenses = false;
+    globals.ghosts = false;
 
     globals.ambientCoefficient = 0.2;
     globals.ambientColour.red = 1.0;

@@ -4,7 +4,10 @@ extern GlobalVars globals;
 
 /*http://john-chapman-graphics.blogspot.ca/2013/02/pseudo-lens-flare.html
   Generates a pseudo-lens-flare texture using John Chapman's algorithm.*/
-void generateGhostTexture(Point2D lightCenter, double starburstCoreRadius){
+void generateGhostTexture(){
+    IntegerList * brightPixels = NULL;
+    int maxX, maxY, minX, minY;
+
     Vector2D centerToLightSide1;
     Vector2D centerToLightSide2;
     Vector2D centerToLightCenter;
@@ -13,7 +16,27 @@ void generateGhostTexture(Point2D lightCenter, double starburstCoreRadius){
     Point2D lightSide1;
     Point2D lightSide2;
 
-    static double flareDisplacement = 10.0;
+    Point2D lightCenter;
+    double starburstCoreRadius;
+
+    static double flareDisplacement = 300.0;
+
+    /*Find out where the light is*/
+    brightPixels = sampleAllBrightSpots(globals.starburstTexturePixels, &minX, &minY, &maxX, &maxY);
+    if(brightPixels == NULL){
+        return;
+    }
+
+    if(maxX - minX > maxY - minY){
+        starburstCoreRadius = maxX - minX;
+    }
+
+    else{
+        starburstCoreRadius = maxY - minY;
+    }
+
+    lightCenter.x = (maxX + minX) / 2;
+    lightCenter.y = (maxY + minX) / 2;
 
     /*Compute the vectors through the center of the screen to the light source for positioning flares*/
     centerToLightCenter.position.x = 0;
@@ -24,6 +47,8 @@ void generateGhostTexture(Point2D lightCenter, double starburstCoreRadius){
     centerToLightCenter = normalize2D(centerToLightCenter);
 
     centerToLightPerpendicular = normalize2D(getPerpendicular(centerToLightCenter));
+    centerToLightPerpendicular.position.x = lightCenter.x;
+    centerToLightPerpendicular.position.y = lightCenter.y;
 
     lightSide1.x = centerToLightPerpendicular.position.x + (centerToLightPerpendicular.direction.x * starburstCoreRadius);
     lightSide1.y = centerToLightPerpendicular.position.y + (centerToLightPerpendicular.direction.y * starburstCoreRadius);
@@ -44,6 +69,8 @@ void generateGhostTexture(Point2D lightCenter, double starburstCoreRadius){
     centerToLightSide2.direction.y = lightSide2.y - centerToLightSide2.position.y;
     centerToLightSide2 = normalize2D(centerToLightSide2);
 
+    /*Copy and paste bright spots*/
+    copyAndRescaleBrightSpots(globals.starburstTexturePixels, globals.ghostTexturePixels, brightPixels, lightCenter.x + (centerToLightCenter.direction.x * flareDisplacement), lightCenter.y + (centerToLightCenter.direction.y * flareDisplacement), 0.5, 0.5, 0.5);
 }
 
 
@@ -75,14 +102,36 @@ void integerList_destroyList(IntegerList * list){
 
 
 /*Gets a list of all pixel indices in a texture with an alpha value of 0.9 or higher*/
-IntegerList * sampleAllBrightSpots(GLfloat * pixels){
+IntegerList * sampleAllBrightSpots(GLfloat * pixels, int * minX, int * minY, int * maxX, int * maxY){
     IntegerList * pixelIndexList = NULL;
     int i, j;
 
+    *maxX = -1;
+    *maxY = -1;
+    *minX = START_WIDTH + 1;
+    *minY = START_HEIGHT + 1;
+
     for(i = 0; i < START_HEIGHT; i++){
         for(j = 0; j < START_WIDTH; j++){
-            if(getOverlayPixel(pixels, START_WIDTH, START_HEIGHT, j, i, COL_INDEX_ALPHA) >= 0.9){
+            if(getOverlayPixel(pixels, START_WIDTH, START_HEIGHT, j, i, COL_INDEX_ALPHA) >= 0.95){
                 pixelIndexList = integerList_addToFront(pixelIndexList, j, i);
+
+                /*Record minimum and maximum xy values for calculating the size of the bright spots*/
+                if(j > *maxX){
+                    *maxX = j;
+                }
+
+                if(j < *minX){
+                    *minX = j;
+                }
+
+                if(i > *maxY){
+                    *maxY = i;
+                }
+
+                if(i < *minY){
+                    *minY = i;
+                }
             }
         }
     }
@@ -105,12 +154,11 @@ void copyAndRescaleBrightSpots(GLfloat * starburstPixels, GLfloat * ghostPixels,
 
     /*Get the max and min values*/
     while(currentPixelIndex != NULL){
-        currentPixelIndex = currentPixelIndex->next;
-
         if(currentPixelIndex->x < minX){ minX = currentPixelIndex->x; }
         if(currentPixelIndex->x > maxX){ maxX = currentPixelIndex->x; }
         if(currentPixelIndex->y < minY){ minY = currentPixelIndex->y; }
         if(currentPixelIndex->y > maxY){ maxY = currentPixelIndex->y; }
+        currentPixelIndex = currentPixelIndex->next;
     }
 
     imageWidth = maxX - minX;
@@ -134,8 +182,6 @@ void copyAndRescaleBrightSpots(GLfloat * starburstPixels, GLfloat * ghostPixels,
         if((newPixelX >= 0) && (newPixelY >= 0) && (newPixelX < START_WIDTH) && (newPixelY < START_HEIGHT)){
             insertOverlayPixel(ghostPixels, START_WIDTH, START_HEIGHT, newPixelX, newPixelY, currentPixel[0], currentPixel[1], currentPixel[2], currentPixel[3]);
         }
-
         currentPixelIndex = currentPixelIndex->next;
     }
-
 }

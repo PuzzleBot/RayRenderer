@@ -164,6 +164,7 @@ typedef struct{
     Boolean transparency;
     Boolean lensFlares;
     Boolean realLenses;
+    Boolean ghosts;
 
     /*Coefficients for the illumination model*/
     double ambientCoefficient;

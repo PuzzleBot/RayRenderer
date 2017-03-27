@@ -59,10 +59,10 @@ double sincOperation(long double x);
 
 
 /*Pseudo-ghost computation functions (pseudoGhost.c)*/
-void generateGhostTexture(Point2D lightCenter, double starburstCoreRadius);
+void generateGhostTexture();
 IntegerList * integerList_addToFront(IntegerList * list, int x, int y);
 void integerList_destroyList(IntegerList * list);
-IntegerList * sampleAllBrightSpots(GLfloat * pixels);
+IntegerList * sampleAllBrightSpots(GLfloat * pixels, int * minX, int * minY, int * maxX, int * maxY);
 void copyAndRescaleBrightSpots(GLfloat * starburstPixels, GLfloat * ghostPixels, IntegerList * brightPixelIndexList, double newXcenter, double newYcenter, double horizontalScale, double verticalScale, double opacity);
 
 
@@ -105,6 +105,7 @@ void getIntersectedScreenPixel(Vector3D v, int * pixelXstorage, int * pixelYstor
 void computeOverlayEffects();
 void addLightBlot(LightData light, int pixelX, int pixelY);
 void combinePixelColours(GLfloat * objectPixels, GLfloat * texturePixels, int width, int height, int x, int y);
+void combineAllGlobalPixels(int x, int y);
 
 /*Interface drawing functions (interface.c)*/
 void initLoadingBar();
