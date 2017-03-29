@@ -70,7 +70,7 @@ void generateGhostTexture(){
     centerToLightSide2 = normalize2D(centerToLightSide2);
 
     /*Copy and paste bright spots*/
-    copyAndRescaleBrightSpots(globals.starburstTexturePixels, globals.ghostTexturePixels, brightPixels, lightCenter.x + (centerToLightCenter.direction.x * flareDisplacement), lightCenter.y + (centerToLightCenter.direction.y * flareDisplacement), 0.5, 0.5, 0.5);
+    copyAndRescaleBrightSpots(globals.starburstTexturePixels, globals.ghostTexturePixels, brightPixels, lightCenter.x + (centerToLightCenter.direction.x * flareDisplacement), lightCenter.y + (centerToLightCenter.direction.y * flareDisplacement), 0.5, 0.5, 0.7);
 }
 
 

@@ -148,6 +148,7 @@ typedef struct{
     /*Ghost texture*/
     GLfloat * ghostTexturePixels;
 
+
     /*Width and height of the viewing plane*/
     double planeWidth;
     double planeHeight;

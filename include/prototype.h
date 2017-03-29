@@ -110,3 +110,6 @@ void combineAllGlobalPixels(int x, int y);
 /*Interface drawing functions (interface.c)*/
 void initLoadingBar();
 void incrementLoadingBar();
+
+
+void gaussianBlur(GLfloat ** pixelSource, int pixelRadius);
