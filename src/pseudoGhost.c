@@ -7,6 +7,7 @@ extern GlobalVars globals;
 void generateGhostTexture(){
     IntegerList * brightPixels = NULL;
     int maxX, maxY, minX, minY;
+    int i, j;
 
     Vector2D centerToLightSide1;
     Vector2D centerToLightSide2;
@@ -19,7 +20,8 @@ void generateGhostTexture(){
     Point2D lightCenter;
     double starburstCoreRadius;
 
-    static double flareDisplacement = 300.0;
+    double flareDisplacement;
+    double sizeMultiplier;
 
     /*Find out where the light is*/
     brightPixels = sampleAllBrightSpots(globals.starburstTexturePixels, &minX, &minY, &maxX, &maxY);
@@ -36,11 +38,11 @@ void generateGhostTexture(){
     }
 
     lightCenter.x = (maxX + minX) / 2;
-    lightCenter.y = (maxY + minX) / 2;
+    lightCenter.y = (maxY + minY) / 2;
 
     /*Compute the vectors through the center of the screen to the light source for positioning flares*/
-    centerToLightCenter.position.x = 0;
-    centerToLightCenter.position.y = 0;
+    centerToLightCenter.position.x = START_WIDTH / 2;
+    centerToLightCenter.position.y = START_HEIGHT / 2;
 
     centerToLightCenter.direction.x = lightCenter.x - centerToLightCenter.position.x;
     centerToLightCenter.direction.y = lightCenter.y - centerToLightCenter.position.y;
@@ -70,7 +72,26 @@ void generateGhostTexture(){
     centerToLightSide2 = normalize2D(centerToLightSide2);
 
     /*Copy and paste bright spots*/
-    copyAndRescaleBrightSpots(globals.starburstTexturePixels, globals.ghostTexturePixels, brightPixels, lightCenter.x + (centerToLightCenter.direction.x * flareDisplacement), lightCenter.y + (centerToLightCenter.direction.y * flareDisplacement), 0.5, 0.5, 0.7);
+    flareDisplacement = getLength2D(centerToLightCenter.position, lightCenter) / 8;
+    sizeMultiplier = 0.25;
+    j = centerToLightCenter.position.x;
+    for(i = centerToLightCenter.position.y + (centerToLightCenter.direction.y * flareDisplacement); ((i < START_HEIGHT) && (i >= 0)) && ((j < START_WIDTH) && (j >= 0)); i = i + (centerToLightCenter.direction.y * flareDisplacement)){
+        j = j + (centerToLightCenter.direction.x * flareDisplacement);
+        copyAndRescaleBrightSpots(globals.starburstTexturePixels, globals.ghostTexturePixels, brightPixels, j, i, sizeMultiplier, sizeMultiplier, 0.7);
+        flareDisplacement = flareDisplacement * 2;
+        sizeMultiplier = sizeMultiplier * 2;
+    }
+
+    flareDisplacement = getLength2D(centerToLightCenter.position, lightCenter) / 8;
+    sizeMultiplier = 0.25;
+    j = centerToLightCenter.position.x;
+    for(i = centerToLightCenter.position.y - (centerToLightCenter.direction.y * flareDisplacement); ((i < START_HEIGHT) && (i >= 0)) && ((j < START_WIDTH) && (j >= 0)); i = i - (centerToLightCenter.direction.y * flareDisplacement)){
+        j = j - (centerToLightCenter.direction.x * flareDisplacement);
+        copyAndRescaleBrightSpots(globals.starburstTexturePixels, globals.ghostTexturePixels, brightPixels, j, i, sizeMultiplier, sizeMultiplier, 0.7);
+        flareDisplacement = flareDisplacement * 2;
+        sizeMultiplier = sizeMultiplier * 2;
+    }
+
 }
 
 

@@ -33,10 +33,10 @@ void gaussianBlur(GLfloat ** pixelSource, int pixelRadius){
                 x = j - pixelRadius;
                 y = i - pixelRadius;
                 normalDistribution[i][j] = pow(M_E, -((pow(x, 2) + pow(y, 2)) / (2*pow(standardDeviation, 2)))) / (2 * M_PI * (pow(standardDeviation, 2)));
-                printf("%.2f ", normalDistribution[i][j]);
+                //printf("%.2f ", normalDistribution[i][j]);
             }
         }
-        printf("\n");
+        //printf("\n");
     }
 
     /*Blur the source, writing the blurred result to the destination*/
