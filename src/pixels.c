@@ -211,7 +211,10 @@ void computeOverlayEffects(){
 
         if(globals.ghosts == true){
             generateGhostTexture();
-            gaussianBlur(&globals.ghostTexturePixels, 5);
+
+            for(i = 0; i < BLUR_ITERATIONS; i++){
+                gaussianBlurGhost(&globals.ghostTexturePixels, BLUR_SAMPLE_RADIUS);
+            }
             for(j = 0; j < START_HEIGHT; j++){
                 for(k = 0; k < START_WIDTH; k++){
                     combinePixelColours(globals.pixels, globals.ghostTexturePixels, START_WIDTH, START_HEIGHT, k, j);

@@ -9,10 +9,10 @@ void generateGhostTexture(){
     int maxX, maxY, minX, minY;
     int i, j;
 
-    Vector2D centerToLightSide1;
-    Vector2D centerToLightSide2;
     Vector2D centerToLightCenter;
-    Vector2D centerToLightPerpendicular;
+    /*Vector2D centerToLightSide1;
+    Vector2D centerToLightSide2;
+    Vector2D centerToLightPerpendicular;*/
 
     Point2D lightSide1;
     Point2D lightSide2;
@@ -22,6 +22,7 @@ void generateGhostTexture(){
 
     double flareDisplacement;
     double sizeMultiplier;
+    static double opacityModifier = 1.0;
 
     /*Find out where the light is*/
     brightPixels = sampleAllBrightSpots(globals.starburstTexturePixels, &minX, &minY, &maxX, &maxY);
@@ -48,7 +49,7 @@ void generateGhostTexture(){
     centerToLightCenter.direction.y = lightCenter.y - centerToLightCenter.position.y;
     centerToLightCenter = normalize2D(centerToLightCenter);
 
-    centerToLightPerpendicular = normalize2D(getPerpendicular(centerToLightCenter));
+    /*centerToLightPerpendicular = normalize2D(getPerpendicular(centerToLightCenter));
     centerToLightPerpendicular.position.x = lightCenter.x;
     centerToLightPerpendicular.position.y = lightCenter.y;
 
@@ -69,7 +70,7 @@ void generateGhostTexture(){
     centerToLightSide2.position.y = 0;
     centerToLightSide2.direction.x = lightSide2.x - centerToLightSide2.position.x;
     centerToLightSide2.direction.y = lightSide2.y - centerToLightSide2.position.y;
-    centerToLightSide2 = normalize2D(centerToLightSide2);
+    centerToLightSide2 = normalize2D(centerToLightSide2);*/
 
     /*Copy and paste bright spots*/
     flareDisplacement = getLength2D(centerToLightCenter.position, lightCenter) / 8;
@@ -77,7 +78,7 @@ void generateGhostTexture(){
     j = centerToLightCenter.position.x;
     for(i = centerToLightCenter.position.y + (centerToLightCenter.direction.y * flareDisplacement); ((i < START_HEIGHT) && (i >= 0)) && ((j < START_WIDTH) && (j >= 0)); i = i + (centerToLightCenter.direction.y * flareDisplacement)){
         j = j + (centerToLightCenter.direction.x * flareDisplacement);
-        copyAndRescaleBrightSpots(globals.starburstTexturePixels, globals.ghostTexturePixels, brightPixels, j, i, sizeMultiplier, sizeMultiplier, 0.7);
+        copyAndRescaleBrightSpots(globals.starburstTexturePixels, globals.ghostTexturePixels, brightPixels, j, i, sizeMultiplier, sizeMultiplier, opacityModifier);
         flareDisplacement = flareDisplacement * 2;
         sizeMultiplier = sizeMultiplier * 2;
     }
@@ -87,7 +88,7 @@ void generateGhostTexture(){
     j = centerToLightCenter.position.x;
     for(i = centerToLightCenter.position.y - (centerToLightCenter.direction.y * flareDisplacement); ((i < START_HEIGHT) && (i >= 0)) && ((j < START_WIDTH) && (j >= 0)); i = i - (centerToLightCenter.direction.y * flareDisplacement)){
         j = j - (centerToLightCenter.direction.x * flareDisplacement);
-        copyAndRescaleBrightSpots(globals.starburstTexturePixels, globals.ghostTexturePixels, brightPixels, j, i, sizeMultiplier, sizeMultiplier, 0.7);
+        copyAndRescaleBrightSpots(globals.starburstTexturePixels, globals.ghostTexturePixels, brightPixels, j, i, sizeMultiplier, sizeMultiplier, opacityModifier);
         flareDisplacement = flareDisplacement * 2;
         sizeMultiplier = sizeMultiplier * 2;
     }
@@ -134,7 +135,7 @@ IntegerList * sampleAllBrightSpots(GLfloat * pixels, int * minX, int * minY, int
 
     for(i = 0; i < START_HEIGHT; i++){
         for(j = 0; j < START_WIDTH; j++){
-            if(getOverlayPixel(pixels, START_WIDTH, START_HEIGHT, j, i, COL_INDEX_ALPHA) >= 0.95){
+            if(getOverlayPixel(pixels, START_WIDTH, START_HEIGHT, j, i, COL_INDEX_ALPHA) >= BRIGHTSPOT_LOWER_BOUND){
                 pixelIndexList = integerList_addToFront(pixelIndexList, j, i);
 
                 /*Record minimum and maximum xy values for calculating the size of the bright spots*/

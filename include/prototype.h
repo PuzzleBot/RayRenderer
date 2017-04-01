@@ -112,4 +112,6 @@ void initLoadingBar();
 void incrementLoadingBar();
 
 
+/*Blur functions*/
 void gaussianBlur(GLfloat ** pixelSource, int pixelRadius);
+void gaussianBlurGhost(GLfloat ** pixelSource, int pixelRadius);

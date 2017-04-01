@@ -10,11 +10,11 @@ void init(void){
 
 void display(void){
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+
     if(globals.drawingDone == 0){
         drawPixels();
         glFlush();
-        
+
         globals.drawingDone = 1;
     }
 }
@@ -45,6 +45,10 @@ void keyboard(unsigned char key, int x, int y){
             break;
         case '3':
             glDrawPixels(START_WIDTH, START_HEIGHT, GL_RGBA, GL_FLOAT, globals.starburstTexturePixels);
+            glFlush();
+            break;
+        case '4':
+            glDrawPixels(START_WIDTH, START_HEIGHT, GL_RGBA, GL_FLOAT, globals.ghostTexturePixels);
             glFlush();
             break;
     }
