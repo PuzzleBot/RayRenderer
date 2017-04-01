@@ -251,7 +251,6 @@ void computeOverlayEffects(){
             }
         }
     }
-
 }
 
 /*Puts white pixels in a 3-pixel radius of the specified pixel coordinates.*/

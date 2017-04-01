@@ -22,7 +22,7 @@ void generateGhostTexture(){
 
     double flareDisplacement;
     double sizeMultiplier;
-    static double opacityModifier = 1.0;
+    double opacityModifier;
 
     /*Find out where the light is*/
     brightPixels = sampleAllBrightSpots(globals.starburstTexturePixels, &minX, &minY, &maxX, &maxY);
@@ -72,25 +72,29 @@ void generateGhostTexture(){
     centerToLightSide2.direction.y = lightSide2.y - centerToLightSide2.position.y;
     centerToLightSide2 = normalize2D(centerToLightSide2);*/
 
-    /*Copy and paste bright spots*/
+    /*Copy and paste bright spots, starting from the center and moving outwards*/
     flareDisplacement = getLength2D(centerToLightCenter.position, lightCenter) / 8;
     sizeMultiplier = 0.25;
+    opacityModifier = GHOST_OPACITY_MODIFIER;
     j = centerToLightCenter.position.x;
     for(i = centerToLightCenter.position.y + (centerToLightCenter.direction.y * flareDisplacement); ((i < START_HEIGHT) && (i >= 0)) && ((j < START_WIDTH) && (j >= 0)); i = i + (centerToLightCenter.direction.y * flareDisplacement)){
         j = j + (centerToLightCenter.direction.x * flareDisplacement);
         copyAndRescaleBrightSpots(globals.starburstTexturePixels, globals.ghostTexturePixels, brightPixels, j, i, sizeMultiplier, sizeMultiplier, opacityModifier);
         flareDisplacement = flareDisplacement * 2;
         sizeMultiplier = sizeMultiplier * 2;
+        opacityModifier = opacityModifier * 0.8;
     }
 
     flareDisplacement = getLength2D(centerToLightCenter.position, lightCenter) / 8;
     sizeMultiplier = 0.25;
+    opacityModifier = GHOST_OPACITY_MODIFIER;
     j = centerToLightCenter.position.x;
     for(i = centerToLightCenter.position.y - (centerToLightCenter.direction.y * flareDisplacement); ((i < START_HEIGHT) && (i >= 0)) && ((j < START_WIDTH) && (j >= 0)); i = i - (centerToLightCenter.direction.y * flareDisplacement)){
         j = j - (centerToLightCenter.direction.x * flareDisplacement);
         copyAndRescaleBrightSpots(globals.starburstTexturePixels, globals.ghostTexturePixels, brightPixels, j, i, sizeMultiplier, sizeMultiplier, opacityModifier);
         flareDisplacement = flareDisplacement * 2;
         sizeMultiplier = sizeMultiplier * 2;
+        opacityModifier = opacityModifier * 0.8;
     }
 
 }
