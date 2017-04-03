@@ -49,49 +49,27 @@ void generateGhostTexture(){
     centerToLightCenter.direction.y = lightCenter.y - centerToLightCenter.position.y;
     centerToLightCenter = normalize2D(centerToLightCenter);
 
-    /*centerToLightPerpendicular = normalize2D(getPerpendicular(centerToLightCenter));
-    centerToLightPerpendicular.position.x = lightCenter.x;
-    centerToLightPerpendicular.position.y = lightCenter.y;
-
-    lightSide1.x = centerToLightPerpendicular.position.x + (centerToLightPerpendicular.direction.x * starburstCoreRadius);
-    lightSide1.y = centerToLightPerpendicular.position.y + (centerToLightPerpendicular.direction.y * starburstCoreRadius);
-
-    lightSide2.x = centerToLightPerpendicular.position.x - (centerToLightPerpendicular.direction.x * starburstCoreRadius);
-    lightSide2.y = centerToLightPerpendicular.position.y - (centerToLightPerpendicular.direction.y * starburstCoreRadius);
-
-
-    centerToLightSide1.position.x = 0;
-    centerToLightSide1.position.y = 0;
-    centerToLightSide1.direction.x = lightSide1.x - centerToLightSide1.position.x;
-    centerToLightSide1.direction.y = lightSide1.y - centerToLightSide1.position.y;
-    centerToLightSide1 = normalize2D(centerToLightSide1);
-
-    centerToLightSide2.position.x = 0;
-    centerToLightSide2.position.y = 0;
-    centerToLightSide2.direction.x = lightSide2.x - centerToLightSide2.position.x;
-    centerToLightSide2.direction.y = lightSide2.y - centerToLightSide2.position.y;
-    centerToLightSide2 = normalize2D(centerToLightSide2);*/
-
-    /*Copy and paste bright spots, starting from the center and moving outwards*/
+    /*Copy and paste bright spots, starting from the center and moving outwards towards the bright spot*/
     flareDisplacement = getLength2D(centerToLightCenter.position, lightCenter) / 8;
     sizeMultiplier = 0.25;
     opacityModifier = GHOST_OPACITY_MODIFIER;
     j = centerToLightCenter.position.x;
     for(i = centerToLightCenter.position.y + (centerToLightCenter.direction.y * flareDisplacement); ((i < START_HEIGHT) && (i >= 0)) && ((j < START_WIDTH) && (j >= 0)); i = i + (centerToLightCenter.direction.y * flareDisplacement)){
         j = j + (centerToLightCenter.direction.x * flareDisplacement);
-        copyAndRescaleBrightSpots(globals.starburstTexturePixels, globals.ghostTexturePixels, brightPixels, j, i, sizeMultiplier, sizeMultiplier, opacityModifier);
+        copyAndTransformBrightSpots(globals.starburstTexturePixels, globals.ghostTexturePixels, brightPixels, j, i, sizeMultiplier, sizeMultiplier, opacityModifier);
         flareDisplacement = flareDisplacement * 2;
         sizeMultiplier = sizeMultiplier * 2;
         opacityModifier = opacityModifier * 0.8;
     }
 
+    /*Copy and paste brightspots, starting from the center and moving away from the bright spot */
     flareDisplacement = getLength2D(centerToLightCenter.position, lightCenter) / 8;
     sizeMultiplier = 0.25;
     opacityModifier = GHOST_OPACITY_MODIFIER;
     j = centerToLightCenter.position.x;
     for(i = centerToLightCenter.position.y - (centerToLightCenter.direction.y * flareDisplacement); ((i < START_HEIGHT) && (i >= 0)) && ((j < START_WIDTH) && (j >= 0)); i = i - (centerToLightCenter.direction.y * flareDisplacement)){
         j = j - (centerToLightCenter.direction.x * flareDisplacement);
-        copyAndRescaleBrightSpots(globals.starburstTexturePixels, globals.ghostTexturePixels, brightPixels, j, i, sizeMultiplier, sizeMultiplier, opacityModifier);
+        copyAndTransformBrightSpots(globals.starburstTexturePixels, globals.ghostTexturePixels, brightPixels, j, i, sizeMultiplier, sizeMultiplier, opacityModifier);
         flareDisplacement = flareDisplacement * 2;
         sizeMultiplier = sizeMultiplier * 2;
         opacityModifier = opacityModifier * 0.8;
@@ -165,7 +143,7 @@ IntegerList * sampleAllBrightSpots(GLfloat * pixels, int * minX, int * minY, int
     return(pixelIndexList);
 }
 
-void copyAndRescaleBrightSpots(GLfloat * starburstPixels, GLfloat * ghostPixels, IntegerList * brightPixelIndexList, double newXcenter, double newYcenter, double horizontalScale, double verticalScale, double opacity){
+void copyAndTransformBrightSpots(GLfloat * starburstPixels, GLfloat * ghostPixels, IntegerList * brightPixelIndexList, double newXcenter, double newYcenter, double horizontalScale, double verticalScale, double opacity){
     int newPixelX, newPixelY;
     GLfloat currentPixel[4];
     IntegerList * currentPixelIndex = brightPixelIndexList;

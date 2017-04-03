@@ -9,8 +9,8 @@ ColourRGB traceRay(Vector3D ray, int currentIteration, double currentRefractInde
     ShapeData * closestShape = NULL;
     Point3D intersection;
 
-    /*Another shape intersected by the shape-to-light vector*/
-    ShapeData * blockingShape = NULL;
+    /*Shape-to-light vector - how much light reaches the shape from the source*/
+    double passThroughRatio;
 
     ColourRGB finalColour;
 
@@ -88,45 +88,48 @@ ColourRGB traceRay(Vector3D ray, int currentIteration, double currentRefractInde
             shapeToLightVector = normalize(shapeToLightVector);
 
             /*Shadow check*/
-            blockingShape = getFirstIntersectedShape(shapeToLightVector);
-            if(blockingShape == NULL){
+
+            /*Check for shapes between the reflected ray and the light source, and scale down
+              the effect of the light based on the shape's opacity*/
+            passThroughRatio = getBlockedLightPassRatio(shapeToLightVector);
+            if(passThroughRatio > 0.01){
 
                 lightReflectVector = getReflection(shapeToLightVector, shapeNormal, intersection);
                 lightReflectVector = normalize(lightReflectVector);
 
                 /*Diffuse component*/
-                diffuseComponent.red = diffuseComponent.red
+                diffuseComponent.red = (diffuseComponent.red
                 + (globals.diffuseCoefficient
                    * closestShape->colour.red
-                   * dotProduct(shapeNormal, shapeToLightVector));
+                   * dotProduct(shapeNormal, shapeToLightVector))) * passThroughRatio;
 
-                diffuseComponent.green = diffuseComponent.green
+                diffuseComponent.green = (diffuseComponent.green
                 + (globals.diffuseCoefficient
                    * closestShape->colour.green
-                   * dotProduct(shapeNormal, shapeToLightVector));
+                   * dotProduct(shapeNormal, shapeToLightVector))) * passThroughRatio;
 
-                diffuseComponent.blue = diffuseComponent.blue
+                diffuseComponent.blue = (diffuseComponent.blue
                 + (globals.diffuseCoefficient
                    * closestShape->colour.blue
-                   * dotProduct(shapeNormal, shapeToLightVector));
+                   * dotProduct(shapeNormal, shapeToLightVector))) * passThroughRatio;
 
                 /*Specular component*/
                 angle = angleBetween(lightReflectVector, shapeToViewVector);
                 if((angle >= (M_PI/2)) && (closestShape->reflectivity > 0.01)){
-                    specularComponent.red = specularComponent.red
+                    specularComponent.red = (specularComponent.red
                     + (globals.specularCoefficient
                        * globals.lights[i].colour.red
-                       * pow(dotProduct(lightReflectVector, shapeToViewVector), globals.specularFiness));
+                       * pow(dotProduct(lightReflectVector, shapeToViewVector), globals.specularFiness))) * passThroughRatio;
 
-                    specularComponent.green = specularComponent.green
+                    specularComponent.green = (specularComponent.green
                     + (globals.specularCoefficient
                        * globals.lights[i].colour.green
-                       * pow(dotProduct(lightReflectVector, shapeToViewVector), globals.specularFiness));
+                       * pow(dotProduct(lightReflectVector, shapeToViewVector), globals.specularFiness))) * passThroughRatio;
 
-                    specularComponent.blue = specularComponent.blue
+                    specularComponent.blue = (specularComponent.blue
                     + (globals.specularCoefficient
                        * globals.lights[i].colour.blue
-                       * pow(dotProduct(lightReflectVector, shapeToViewVector), globals.specularFiness));
+                       * pow(dotProduct(lightReflectVector, shapeToViewVector), globals.specularFiness))) * passThroughRatio;
                 }
 
                 /*All together*/
@@ -219,4 +222,34 @@ ShapeData * getFirstIntersectedShape(Vector3D ray){
     }
 
     return(closestShape);
+}
+
+/*Calculates how much light (as a ratio from 0 to 1) reaches the ray's positition
+  after passing through transparent objects.*/
+double getBlockedLightPassRatio(Vector3D ray){
+    int i;
+
+    Point3D currentIntersection;
+    double passRatio = 1.0;
+
+    for(i = 0; i < globals.numberOfShapes; i++){
+        currentIntersection = getIntersection(globals.shapes[i], ray);
+
+        /*Determine if each shape is intersected or not. If intersected,
+          block out some of the light depending on opacity*/
+        if(isNullPoint(currentIntersection) == false){
+            if(globals.shapes[i].opacity < 1.0){
+                passRatio = passRatio * (1.0 - globals.shapes[i].opacity);
+            }
+            else{
+                return(0.0);
+            }
+        }
+    }
+
+    if(passRatio < 0.0){
+        passRatio = -passRatio;
+    }
+
+    return(passRatio);
 }

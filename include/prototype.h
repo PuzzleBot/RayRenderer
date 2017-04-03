@@ -63,7 +63,7 @@ void generateGhostTexture();
 IntegerList * integerList_addToFront(IntegerList * list, int x, int y);
 void integerList_destroyList(IntegerList * list);
 IntegerList * sampleAllBrightSpots(GLfloat * pixels, int * minX, int * minY, int * maxX, int * maxY);
-void copyAndRescaleBrightSpots(GLfloat * starburstPixels, GLfloat * ghostPixels, IntegerList * brightPixelIndexList, double newXcenter, double newYcenter, double horizontalScale, double verticalScale, double opacity);
+void copyAndTransformBrightSpots(GLfloat * starburstPixels, GLfloat * ghostPixels, IntegerList * brightPixelIndexList, double newXcenter, double newYcenter, double horizontalScale, double verticalScale, double opacity);
 
 
 /*Reflections and refractions (shape.c)*/
@@ -94,6 +94,7 @@ Boolean isNullPoint(Point3D point);
 /*Ray tracing-specific functions (ray.c)*/
 ColourRGB traceRay(Vector3D ray, int currentIteration, double currentRefractIndex);
 ShapeData * getFirstIntersectedShape(Vector3D ray);
+double getBlockedLightPassRatio(Vector3D ray);
 
 /*Pixel drawing functions (pixels.c)*/
 void drawPixels();

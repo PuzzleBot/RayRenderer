@@ -79,7 +79,7 @@ void gaussianBlur(GLfloat ** pixelSource, int pixelRadius){
     *pixelSource = blurredPixels;
 }
 
-
+/*Specialized blur that only blurs the opacity of the image*/
 void gaussianBlurGhost(GLfloat ** pixelSource, int pixelRadius){
     int i, j;
     int x, y;
