@@ -88,7 +88,7 @@ void blendOverlayPixel(GLfloat * pixelArray, int width, int height, int x, int y
     pixelArray[(y * width * 4) + (x * 4)] = r;
     pixelArray[(y * width * 4) + (x * 4) + 1] = g;
     pixelArray[(y * width * 4) + (x * 4) + 2] = b;
-    pixelArray[(y * width * 4) + (x * 4) + 3] = a;
+    pixelArray[(y * width * 4) + (x * 4) + 3] = pixelArray[(y * width * 4) + (x * 4) + 3] + a;
 }
 
 GLfloat getOverlayPixel(GLfloat * pixelArray, int width, int height, int x, int y, int rgbaOption){

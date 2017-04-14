@@ -238,7 +238,7 @@ double getBlockedLightPassRatio(Vector3D ray){
         /*Determine if each shape is intersected or not. If intersected,
           block out some of the light depending on opacity*/
         if(isNullPoint(currentIntersection) == false){
-            if(globals.shapes[i].opacity < 1.0){
+            if((globals.shapes[i].opacity < 1.0)){
                 passRatio = passRatio * (1.0 - globals.shapes[i].opacity);
             }
             else{

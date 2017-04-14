@@ -12,10 +12,10 @@ void generateGhostTexture(){
     Vector2D centerToLightCenter;
     /*Vector2D centerToLightSide1;
     Vector2D centerToLightSide2;
-    Vector2D centerToLightPerpendicular;*/
+    Vector2D centerToLightPerpendicular;
 
     Point2D lightSide1;
-    Point2D lightSide2;
+    Point2D lightSide2;*/
 
     Point2D lightCenter;
     double starburstCoreRadius;
@@ -63,7 +63,7 @@ void generateGhostTexture(){
     }
 
     /*Copy and paste brightspots, starting from the center and moving away from the bright spot */
-    flareDisplacement = getLength2D(centerToLightCenter.position, lightCenter) / 8;
+    /*flareDisplacement = getLength2D(centerToLightCenter.position, lightCenter) / 8;
     sizeMultiplier = 0.25;
     opacityModifier = GHOST_OPACITY_MODIFIER;
     j = centerToLightCenter.position.x;
@@ -73,7 +73,7 @@ void generateGhostTexture(){
         flareDisplacement = flareDisplacement * 2;
         sizeMultiplier = sizeMultiplier * 2;
         opacityModifier = opacityModifier * 0.8;
-    }
+    }*/
 
 }
 
@@ -184,8 +184,18 @@ void copyAndTransformBrightSpots(GLfloat * starburstPixels, GLfloat * ghostPixel
         newPixelY = ((currentPixelIndex->y - imageCenterY) * verticalScale) + newYcenter;
 
         if((newPixelX >= 0) && (newPixelY >= 0) && (newPixelX < START_WIDTH) && (newPixelY < START_HEIGHT)){
-            insertOverlayPixel(ghostPixels, START_WIDTH, START_HEIGHT, newPixelX, newPixelY, currentPixel[0], currentPixel[1], currentPixel[2], currentPixel[3]);
+            blendOverlayPixel(ghostPixels, START_WIDTH, START_HEIGHT, newPixelX, newPixelY, currentPixel[0], currentPixel[1], currentPixel[2], currentPixel[3]);
         }
+
+
+        /*Copy again, reflected in the origin*/
+        newPixelX = (-(currentPixelIndex->x - imageCenterX) * horizontalScale) + (START_WIDTH - newXcenter);
+        newPixelY = (-(currentPixelIndex->y - imageCenterY) * verticalScale) + (START_HEIGHT - newYcenter);
+
+        if((newPixelX >= 0) && (newPixelY >= 0) && (newPixelX < START_WIDTH) && (newPixelY < START_HEIGHT)){
+            blendOverlayPixel(ghostPixels, START_WIDTH, START_HEIGHT, newPixelX, newPixelY, currentPixel[0], currentPixel[1], currentPixel[2], currentPixel[3]);
+        }
+
         currentPixelIndex = currentPixelIndex->next;
     }
 }
